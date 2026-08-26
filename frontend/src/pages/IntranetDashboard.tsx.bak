@@ -1,0 +1,614 @@
+import React, { useMemo, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import {
+  AlertCircle,
+  BarChart3,
+  Bell,
+  CalendarClock,
+  CheckCircle2,
+  ChevronRight,
+  ClipboardList,
+  Clock,
+  FileText,
+  Filter,
+  Headphones,
+  LayoutDashboard,
+  LogOut,
+  MapPin,
+  Menu,
+  MessageSquareText,
+  Navigation,
+  PackageCheck,
+  PackageSearch,
+  Phone,
+  PieChart,
+  Plus,
+  ReceiptText,
+  Route,
+  Search,
+  Send,
+  ShoppingCart,
+  Star,
+  Target,
+  TrendingUp,
+  UserCheck,
+  Users,
+  WalletCards,
+} from 'lucide-react';
+import '../styles/intranet.css';
+
+const metrics = [
+  { label: 'Ventas del mes', value: '$42,8M', helper: '+12% vs. mes anterior', icon: TrendingUp, tone: 'green' },
+  { label: 'Pipeline activo', value: '$18,6M', helper: '21 oportunidades abiertas', icon: PieChart, tone: 'amber' },
+  { label: 'Clientes visitados', value: '38', helper: '7 pendientes esta semana', icon: Users, tone: 'blue' },
+  { label: 'Pedidos hoy', value: '14', helper: '4 en despacho', icon: ShoppingCart, tone: 'red' },
+];
+
+const pipeline = [
+  { stage: 'Prospectos', total: '$5,2M', count: 9, progress: 34 },
+  { stage: 'Cotización', total: '$8,1M', count: 7, progress: 52 },
+  { stage: 'Negociación', total: '$3,4M', count: 3, progress: 68 },
+  { stage: 'Cierre', total: '$1,9M', count: 2, progress: 84 },
+];
+
+const clients = [
+  { name: 'Restaurante El Parrillero', tag: 'HORECA', status: 'Recompra probable', amount: '$890.500', last: 'Visitado hoy', phone: '+56 9 8123 4400', owner: 'Carlos', frequency: 'Semanal', risk: 'Bajo', address: 'Av. Providencia 1510', lat: -33.426, lng: -70.617 },
+  { name: 'Carnicería Don José', tag: 'Retail', status: 'Pago al día', amount: '$1.240.000', last: 'Pedido entregado', phone: '+56 9 7122 1188', owner: 'Carlos', frequency: '2 veces/semana', risk: 'Bajo', address: 'San Diego 890', lat: -33.454, lng: -70.648 },
+  { name: 'Supermercados La Económica', tag: 'Mayorista', status: 'Requiere aprobación', amount: '$3.450.000', last: 'Hace 1 hora', phone: '+56 9 6654 1200', owner: 'Carlos', frequency: 'Quincenal', risk: 'Alto', address: 'Av. Recoleta 1201', lat: -33.414, lng: -70.641 },
+  { name: 'Hotel Las Condes', tag: 'Foodservice', status: 'Negociación abierta', amount: '$1.980.000', last: 'Llamado hoy', phone: '+56 9 9011 2233', owner: 'Carlos', frequency: 'Mensual', risk: 'Medio', address: 'Apoquindo 4500', lat: -33.416, lng: -70.586 },
+];
+
+const tasks = [
+  { label: 'Llamar a La Económica por aprobación de crédito', time: '12:30', priority: 'Alta' },
+  { label: 'Enviar cotización de lomo vetado premium', time: '15:00', priority: 'Media' },
+  { label: 'Registrar visita a nueva sucursal Vitacura', time: '17:15', priority: 'Media' },
+];
+
+const stockAlerts = [
+  { sku: 'Asado Carnicero', detail: 'Quedan 18 cajas', state: 'Bajo stock' },
+  { sku: 'Lomo Liso Angus', detail: 'Reposición mañana', state: 'Reservar' },
+  { sku: 'Entraña Premium', detail: 'Alta demanda HORECA', state: 'Prioridad' },
+];
+
+const catalogProducts = [
+  { name: 'Lomo Vetado', category: 'Vacuno', sku: 'KRM-LOM-120', format: 'Caja 12 kg', stock: 42, price: 12990, img: '/productos/vacuno/LOMO VETADO.png' },
+  { name: 'Lomo Liso', category: 'Vacuno', sku: 'KRM-LOM-121', format: 'Caja 10 kg', stock: 34, price: 11990, img: '/productos/vacuno/Lomo Liso.png' },
+  { name: 'Entraña', category: 'Vacuno', sku: 'KRM-ENT-122', format: 'Caja 10 kg', stock: 18, price: 14990, img: '/productos/vacuno/ENTRAÑA.png' },
+  { name: 'Baby Ribs', category: 'Cerdo', sku: 'KRM-BAB-123', format: 'Caja 15 kg', stock: 27, price: 7990, img: '/productos/cerdo/BabyRibs.png' },
+  { name: 'Medallas Salmón 100g', category: 'Salmón', sku: 'KRM-MED-124', format: 'Caja 8 kg', stock: 21, price: 9990, img: '/productos/salmon/Medallas Salmon 100g uds.png' },
+  { name: 'Molida Vegana', category: 'Vegana', sku: 'KRM-MOL-125', format: '250g / 500g', stock: 56, price: 5490, img: '/productos/Vegana/Molida Vegana 250g y 500g.png' },
+];
+
+const routeStops = [
+  { time: '09:00', client: 'Carnicería Don José', zone: 'Santiago Centro', action: 'Confirmar recepción', status: 'Completado', duration: '28 min', order: 1 },
+  { time: '11:30', client: 'Restaurante El Parrillero', zone: 'Providencia', action: 'Levantar recompra', status: 'En ruta', duration: '22 min', order: 2 },
+  { time: '14:45', client: 'Hotel Las Condes', zone: 'Las Condes', action: 'Presentar lista premium', status: 'Pendiente', duration: '31 min', order: 3 },
+  { time: '17:00', client: 'Supermercados La Económica', zone: 'Recoleta', action: 'Revisión cobranza', status: 'Pendiente', duration: '35 min', order: 4 },
+];
+
+const callLog = [
+  { client: 'Supermercados La Económica', contact: 'Marcela Ríos', result: 'Solicita extensión de crédito', time: '10:42', next: 'Enviar respaldo a finanzas' },
+  { client: 'Hotel Las Condes', contact: 'Jefe de compras', result: 'Interés en cortes premium', time: '09:18', next: 'Agendar degustación' },
+  { client: 'Carnicería Don José', contact: 'José Muñoz', result: 'Pedido recibido conforme', time: '08:55', next: 'Programar recompra viernes' },
+];
+
+const receivables = [
+  { client: 'Supermercados La Económica', invoice: 'FAC-7812', due: 'Vence hoy', amount: '$2.180.000', status: 'Riesgo' },
+  { client: 'Restaurante El Parrillero', invoice: 'FAC-7798', due: '3 días', amount: '$890.500', status: 'Pendiente' },
+  { client: 'Carnicería Don José', invoice: 'FAC-7761', due: 'Pagada', amount: '$1.240.000', status: 'Al día' },
+];
+
+const orders = [
+  { id: '#PED-4091', client: 'Carnicería Don José', status: 'Entregado', amount: '$1.240.000', date: 'Hoy, 09:30', items: 'Lomo liso, entraña', margin: '22%', source: 'Ruta' },
+  { id: '#PED-4092', client: 'Restaurante El Parrillero', status: 'En preparación', amount: '$890.500', date: 'Hoy, 11:15', items: 'Baby ribs, lomo vetado', margin: '18%', source: 'Llamada' },
+  { id: '#PED-4093', client: 'Supermercados La Económica', status: 'Por aprobar', amount: '$3.450.000', date: 'Hace 1 hora', items: 'Mix mayorista', margin: '15%', source: 'Cotización' },
+  { id: '#PED-4094', client: 'Hotel Las Condes', status: 'Borrador', amount: '$1.980.000', date: '15:40', items: 'Medallas salmón, lomo vetado', margin: '24%', source: 'CRM' },
+];
+
+const sellerControls = [
+  { label: 'GPS corporativo', value: 'Activo', helper: 'Última señal: Providencia, 11:28' },
+  { label: 'Samsung empresa', value: 'Sincronizado', helper: 'Registro automático de llamadas' },
+  { label: 'Clientes bajo cartera', value: '124', helper: '18 con recompra sugerida' },
+  { label: 'Cumplimiento ruta', value: '50%', helper: '2 de 4 visitas del día' },
+];
+
+export default function IntranetDashboard() {
+  const navigate = useNavigate();
+  const [activeTab, setActiveTab] = useState('dashboard');
+  const [activeModule, setActiveModule] = useState('resumen');
+  const [quoteProduct, setQuoteProduct] = useState(catalogProducts[0].name);
+  const [quoteKilos, setQuoteKilos] = useState(24);
+
+  const selectedProduct = catalogProducts.find((product) => product.name === quoteProduct) ?? catalogProducts[0];
+  const quoteSubtotal = selectedProduct.price * quoteKilos;
+  const quoteDiscount = quoteSubtotal * 0.08;
+  const quoteTotal = quoteSubtotal - quoteDiscount;
+  const activeClient = clients[1];
+
+  const currentDate = useMemo(
+    () => new Intl.DateTimeFormat('es-CL', { weekday: 'long', day: 'numeric', month: 'long' }).format(new Date()),
+    []
+  );
+
+  const handleLogout = () => {
+    navigate('/intranet/login');
+  };
+
+  return (
+    <div className="intra-app">
+      <header className="intra-header">
+        <div className="intra-header-left">
+          <button className="intra-icon-btn" aria-label="Abrir menú"><Menu size={22} /></button>
+          <div>
+            <h2>KARMAC <span className="intra-badge">CRM Ventas</span></h2>
+            <span className="intra-header-subtitle">Intranet comercial</span>
+          </div>
+        </div>
+        <div className="intra-header-right">
+          <button className="intra-icon-btn intra-notif" aria-label="Ver notificaciones">
+            <Bell size={21} />
+            <span className="intra-notif-dot"></span>
+          </button>
+          <button className="intra-icon-btn" aria-label="Cerrar sesión" onClick={handleLogout}><LogOut size={21} /></button>
+        </div>
+      </header>
+
+      <main className="intra-main">
+        <section className="intra-hero">
+          <div className="intra-greeting">
+            <span className="intra-eyebrow">{currentDate}</span>
+            <h1>Hola, Carlos</h1>
+            <p>Tu ruta, pipeline y clientes clave están listos para vender mejor hoy.</p>
+          </div>
+          <div className="intra-goal-card">
+            <div className="intra-goal-top">
+              <Target size={20} />
+              <span>Meta semanal</span>
+              <strong>72%</strong>
+            </div>
+            <div className="intra-progress"><span style={{ width: '72%' }} /></div>
+            <p>$14,4M vendidos de $20M</p>
+          </div>
+        </section>
+
+        <section className="intra-toolbar">
+          <label className="intra-search">
+            <Search size={18} />
+            <input placeholder="Buscar cliente, pedido, RUT o producto" />
+          </label>
+          <button className="intra-filter-btn" aria-label="Filtrar"><Filter size={18} /></button>
+        </section>
+
+        <section className="intra-action-grid" aria-label="Acciones rápidas">
+          <button className={`intra-action-card primary ${activeModule === 'cotizar' ? 'active' : ''}`} onClick={() => setActiveModule('cotizar')}><Plus size={24} /><span>Nueva venta</span></button>
+          <button className={`intra-action-card ${activeModule === 'cotizar' ? 'active' : ''}`} onClick={() => setActiveModule('cotizar')}><FileText size={24} /><span>Cotizar</span></button>
+          <button className={`intra-action-card ${activeModule === 'catalogo' ? 'active' : ''}`} onClick={() => setActiveModule('catalogo')}><PackageSearch size={24} /><span>Catálogo</span></button>
+          <button className={`intra-action-card ${activeModule === 'rutas' ? 'active' : ''}`} onClick={() => setActiveModule('rutas')}><MapPin size={24} /><span>Ruta</span></button>
+          <button className={`intra-action-card ${activeModule === 'llamadas' ? 'active' : ''}`} onClick={() => setActiveModule('llamadas')}><Phone size={24} /><span>Llamada</span></button>
+          <button className={`intra-action-card ${activeModule === 'cobranza' ? 'active' : ''}`} onClick={() => setActiveModule('cobranza')}><WalletCards size={24} /><span>Cobranza</span></button>
+        </section>
+
+        <section className="intra-live-module">
+          <div className="intra-section-header">
+            <div>
+              <span className="intra-panel-kicker"><LayoutDashboard size={15} /> Módulo activo</span>
+              <h3>{activeModule === 'resumen' ? 'Resumen comercial' : activeModule}</h3>
+            </div>
+            <button className="intra-link-btn" onClick={() => setActiveModule('resumen')}>Volver al resumen</button>
+          </div>
+
+          {activeModule === 'cotizar' && (
+            <div className="intra-quote-grid">
+              <div className="intra-quote-form">
+                <label>Cliente
+                  <select defaultValue="Restaurante El Parrillero">
+                    {clients.map((client) => <option key={client.name}>{client.name}</option>)}
+                  </select>
+                </label>
+                <label>Producto
+                  <select value={quoteProduct} onChange={(event) => setQuoteProduct(event.target.value)}>
+                    {catalogProducts.map((product) => <option key={product.sku}>{product.name}</option>)}
+                  </select>
+                </label>
+                <label>Kilos
+                  <input type="number" min="1" value={quoteKilos} onChange={(event) => setQuoteKilos(Number(event.target.value) || 1)} />
+                </label>
+                <label>Condición
+                  <select defaultValue="Despacho 24 horas">
+                    <option>Despacho 24 horas</option>
+                    <option>Retiro en planta</option>
+                    <option>Programado semanal</option>
+                  </select>
+                </label>
+              </div>
+              <div className="intra-quote-preview">
+                <span className="intra-status pending"><ReceiptText size={14} /> Cotización borrador</span>
+                <h4>{selectedProduct.name}</h4>
+                <p>{selectedProduct.format} · {selectedProduct.sku}</p>
+                <div className="intra-quote-line"><span>Precio kg</span><b>${selectedProduct.price.toLocaleString('es-CL')}</b></div>
+                <div className="intra-quote-line"><span>Cantidad</span><b>{quoteKilos} kg</b></div>
+                <div className="intra-quote-line"><span>Descuento comercial</span><b>8%</b></div>
+                <div className="intra-quote-total"><span>Total neto</span><strong>${Math.round(quoteTotal).toLocaleString('es-CL')}</strong></div>
+                <button className="intra-insight-btn"><Send size={18} /> Enviar cotización</button>
+              </div>
+            </div>
+          )}
+
+          {activeModule === 'catalogo' && (
+            <div className="intra-catalog-grid">
+              {catalogProducts.map((product) => (
+                <article className="intra-product-card" key={product.sku}>
+                  <img src={product.img} alt={product.name} />
+                  <div>
+                    <small>{product.category}</small>
+                    <h4>{product.name}</h4>
+                    <p>{product.format} · {product.sku}</p>
+                    <div className="intra-product-meta">
+                      <span>{product.stock} cajas</span>
+                      <b>${product.price.toLocaleString('es-CL')} kg</b>
+                    </div>
+                  </div>
+                </article>
+              ))}
+            </div>
+          )}
+
+          {activeModule === 'rutas' && (
+            <div className="intra-route-board">
+              {routeStops.map((stop) => (
+                <article className="intra-route-stop" key={`${stop.time}-${stop.client}`}>
+                  <span className="intra-route-time">{stop.time}</span>
+                  <div>
+                    <h4>{stop.client}</h4>
+                    <p>{stop.zone} · {stop.action}</p>
+                  </div>
+                  <small>{stop.status}</small>
+                </article>
+              ))}
+            </div>
+          )}
+
+          {activeModule === 'llamadas' && (
+            <div className="intra-calls-grid">
+              <div className="intra-call-card">
+                <h4>Registrar llamada</h4>
+                <label>Cliente<select defaultValue="Supermercados La Económica">{clients.map((client) => <option key={client.name}>{client.name}</option>)}</select></label>
+                <label>Resultado<select defaultValue="Seguimiento"><option>Seguimiento</option><option>Venta lograda</option><option>No contesta</option><option>Reclamo</option></select></label>
+                <label>Nota<textarea placeholder="Ej: pide precio por volumen para próxima semana" /></label>
+                <button className="intra-insight-btn"><Phone size={18} /> Guardar llamada</button>
+              </div>
+              <div className="intra-call-log">
+                {callLog.map((call) => (
+                  <article className="intra-log-item" key={`${call.time}-${call.client}`}>
+                    <strong>{call.client}</strong>
+                    <span>{call.time} · {call.contact}</span>
+                    <p>{call.result}</p>
+                    <small>{call.next}</small>
+                  </article>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {activeModule === 'cobranza' && (
+            <div className="intra-collection-grid">
+              {receivables.map((item) => (
+                <article className="intra-collection-card" key={item.invoice}>
+                  <span className={`intra-collection-status ${item.status === 'Riesgo' ? 'risk' : ''}`}>{item.status}</span>
+                  <h4>{item.client}</h4>
+                  <p>{item.invoice} · {item.due}</p>
+                  <strong>{item.amount}</strong>
+                  <button className="intra-link-btn">Registrar gestión</button>
+                </article>
+              ))}
+            </div>
+          )}
+        </section>
+
+        {activeTab === 'dashboard' && (
+          <>
+            <section className="intra-control-strip">
+              {sellerControls.map((item) => (
+                <article className="intra-control-card" key={item.label}>
+                  <span>{item.label}</span>
+                  <strong>{item.value}</strong>
+                  <small>{item.helper}</small>
+                </article>
+              ))}
+            </section>
+
+            <section className="intra-metric-grid">
+              {metrics.map((metric) => {
+                const Icon = metric.icon;
+                return (
+                  <article className={`intra-metric-card ${metric.tone}`} key={metric.label}>
+                    <Icon size={20} />
+                    <span>{metric.label}</span>
+                    <strong>{metric.value}</strong>
+                    <small>{metric.helper}</small>
+                  </article>
+                );
+              })}
+            </section>
+          </>
+        )}
+
+        {activeTab === 'pedidos' && (
+          <section className="intra-panel intra-panel-focus">
+            <div className="intra-section-header">
+              <div>
+                <span className="intra-panel-kicker"><ShoppingCart size={15} /> Control de pedidos</span>
+                <h3>Pedidos del vendedor</h3>
+              </div>
+              <button className="intra-insight-btn"><Plus size={18} /> Nuevo pedido</button>
+            </div>
+            <div className="intra-order-table">
+              {orders.map((order) => (
+                <article className="intra-order-row" key={order.id}>
+                  <div>
+                    <strong>{order.id}</strong>
+                    <span>{order.client}</span>
+                  </div>
+                  <div>
+                    <b>{order.amount}</b>
+                    <span>{order.items}</span>
+                  </div>
+                  <div>
+                    <b>{order.margin}</b>
+                    <span>Margen estimado</span>
+                  </div>
+                  <div>
+                    <span className={`intra-status ${order.status === 'Entregado' ? 'success' : 'pending'}`}>{order.status}</span>
+                    <small>{order.date} · {order.source}</small>
+                  </div>
+                </article>
+              ))}
+            </div>
+          </section>
+        )}
+
+        {activeTab === 'clientes' && (
+          <section className="intra-client-control">
+            <article className="intra-panel intra-panel-large">
+              <div className="intra-section-header">
+                <div>
+                  <span className="intra-panel-kicker"><Users size={15} /> Cartera</span>
+                  <h3>Control de clientes</h3>
+                </div>
+                <button className="intra-insight-btn"><UserCheck size={18} /> Asignar cliente</button>
+              </div>
+              <div className="intra-client-list">
+                {clients.map((client) => (
+                  <button className="intra-client-card" key={client.name}>
+                    <div className="intra-client-avatar">{client.name.charAt(0)}</div>
+                    <div>
+                      <strong>{client.name}</strong>
+                      <span>{client.tag} · {client.address}</span>
+                    </div>
+                    <div className="intra-client-meta">
+                      <small>Riesgo {client.risk} · {client.frequency}</small>
+                      <b>{client.amount}</b>
+                    </div>
+                    <ChevronRight size={18} />
+                  </button>
+                ))}
+              </div>
+            </article>
+            <article className="intra-panel">
+              <span className="intra-panel-kicker"><Phone size={15} /> Ficha activa</span>
+              <h3>{activeClient.name}</h3>
+              <div className="intra-profile-list">
+                <p><b>Teléfono empresa:</b> {activeClient.phone}</p>
+                <p><b>Vendedor:</b> {activeClient.owner}</p>
+                <p><b>Frecuencia:</b> {activeClient.frequency}</p>
+                <p><b>Último contacto:</b> {activeClient.last}</p>
+              </div>
+              <button className="intra-insight-btn"><Phone size={18} /> Llamar con Samsung</button>
+            </article>
+          </section>
+        )}
+
+        {activeTab === 'ruta' && (
+          <section className="intra-map-grid">
+            <article className="intra-map-panel">
+              <div className="intra-section-header">
+                <div>
+                  <span className="intra-panel-kicker"><Navigation size={15} /> Santiago</span>
+                  <h3>Ruta del día con Maps API</h3>
+                </div>
+                <button className="intra-link-btn">Optimizar ruta</button>
+              </div>
+              <div className="intra-map-frame">
+                <iframe
+                  title="Mapa de ruta comercial en Santiago"
+                  src="https://www.openstreetmap.org/export/embed.html?bbox=-70.704%2C-33.489%2C-70.547%2C-33.381&layer=mapnik&marker=-33.4489%2C-70.6693"
+                  loading="lazy"
+                />
+                <div className="intra-map-overlay">
+                  {clients.slice(0, 4).map((client, index) => (
+                    <span className={`intra-map-pin pin-${index + 1}`} key={client.name}>{index + 1}</span>
+                  ))}
+                </div>
+              </div>
+            </article>
+            <article className="intra-panel">
+              <div className="intra-section-header">
+                <div>
+                  <span className="intra-panel-kicker"><CalendarClock size={15} /> Horarios</span>
+                  <h3>Visitas programadas</h3>
+                </div>
+              </div>
+              <div className="intra-route-board">
+                {routeStops.map((stop) => (
+                  <article className="intra-route-stop" key={`${stop.time}-${stop.client}`}>
+                    <span className="intra-route-time">{stop.time}</span>
+                    <div>
+                      <h4>{stop.client}</h4>
+                      <p>{stop.zone} · {stop.action}</p>
+                    </div>
+                    <small>{stop.duration}</small>
+                  </article>
+                ))}
+              </div>
+            </article>
+          </section>
+        )}
+
+        <section className="intra-crm-grid">
+          <article className="intra-panel intra-panel-large">
+            <div className="intra-section-header">
+              <div>
+                <span className="intra-panel-kicker"><BarChart3 size={15} /> Pipeline</span>
+                <h3>Oportunidades activas</h3>
+              </div>
+              <button className="intra-link-btn">Abrir CRM</button>
+            </div>
+            <div className="intra-pipeline">
+              {pipeline.map((item) => (
+                <div className="intra-pipeline-row" key={item.stage}>
+                  <div>
+                    <strong>{item.stage}</strong>
+                    <span>{item.count} negocios</span>
+                  </div>
+                  <div className="intra-pipeline-track"><span style={{ width: `${item.progress}%` }} /></div>
+                  <b>{item.total}</b>
+                </div>
+              ))}
+            </div>
+          </article>
+
+          <article className="intra-panel">
+            <div className="intra-section-header">
+              <div>
+                <span className="intra-panel-kicker"><CalendarClock size={15} /> Agenda</span>
+                <h3>Tareas de hoy</h3>
+              </div>
+            </div>
+            <div className="intra-task-list">
+              {tasks.map((task) => (
+                <button className="intra-task" key={task.label}>
+                  <span className="intra-task-time">{task.time}</span>
+                  <span>{task.label}</span>
+                  <small>{task.priority}</small>
+                </button>
+              ))}
+            </div>
+          </article>
+        </section>
+
+        <section className="intra-crm-grid">
+          <article className="intra-panel intra-panel-large">
+            <div className="intra-section-header">
+              <div>
+                <span className="intra-panel-kicker"><Star size={15} /> Cuentas clave</span>
+                <h3>Clientes priorizados</h3>
+              </div>
+              <button className="intra-link-btn">Ver todos</button>
+            </div>
+            <div className="intra-client-list">
+              {clients.map((client) => (
+                <button className="intra-client-card" key={client.name}>
+                  <div className="intra-client-avatar">{client.name.charAt(0)}</div>
+                  <div>
+                    <strong>{client.name}</strong>
+                    <span>{client.tag} · {client.last}</span>
+                  </div>
+                  <div className="intra-client-meta">
+                    <small>{client.status}</small>
+                    <b>{client.amount}</b>
+                  </div>
+                  <ChevronRight size={18} />
+                </button>
+              ))}
+            </div>
+          </article>
+
+          <article className="intra-panel">
+            <div className="intra-section-header">
+              <div>
+                <span className="intra-panel-kicker"><PackageCheck size={15} /> Inventario</span>
+                <h3>Alertas de stock</h3>
+              </div>
+            </div>
+            <div className="intra-stock-list">
+              {stockAlerts.map((item) => (
+                <div className="intra-stock-item" key={item.sku}>
+                  <AlertCircle size={17} />
+                  <div>
+                    <strong>{item.sku}</strong>
+                    <span>{item.detail}</span>
+                  </div>
+                  <small>{item.state}</small>
+                </div>
+              ))}
+            </div>
+          </article>
+        </section>
+
+        <section className="intra-section">
+          <div className="intra-section-header">
+            <div>
+              <span className="intra-panel-kicker"><ClipboardList size={15} /> Pedidos</span>
+              <h3>Pedidos recientes</h3>
+            </div>
+            <button className="intra-link-btn">Ver todos</button>
+          </div>
+
+          <div className="intra-orders-list">
+            <div className="intra-order-card">
+              <div className="intra-order-top">
+                <span className="intra-order-id">#PED-4091</span>
+                <span className="intra-status success"><CheckCircle2 size={14}/> Entregado</span>
+              </div>
+              <div className="intra-order-client">Carnicería Don José</div>
+              <div className="intra-order-bottom">
+                <span className="intra-order-date">Hoy, 09:30</span>
+                <span className="intra-order-amount">$1.240.000</span>
+              </div>
+            </div>
+
+            <div className="intra-order-card">
+              <div className="intra-order-top">
+                <span className="intra-order-id">#PED-4092</span>
+                <span className="intra-status pending"><Clock size={14}/> En preparación</span>
+              </div>
+              <div className="intra-order-client">Restaurante El Parrillero</div>
+              <div className="intra-order-bottom">
+                <span className="intra-order-date">Hoy, 11:15</span>
+                <span className="intra-order-amount">$890.500</span>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section className="intra-insight-band">
+          <div>
+            <span className="intra-panel-kicker"><Headphones size={15} /> Seguimiento</span>
+            <h3>3 clientes esperan respuesta comercial</h3>
+            <p>Hay cotizaciones abiertas por más de 48 horas. Prioriza contactos con historial de recompra.</p>
+          </div>
+          <button className="intra-insight-btn"><MessageSquareText size={18} /> Responder</button>
+        </section>
+      </main>
+
+      <nav className="intra-bottom-nav" aria-label="Navegación CRM">
+        <button className={`intra-nav-item ${activeTab === 'dashboard' ? 'active' : ''}`} onClick={() => setActiveTab('dashboard')}>
+          <LayoutDashboard size={22} />
+          <span>Inicio</span>
+        </button>
+        <button className={`intra-nav-item ${activeTab === 'pedidos' ? 'active' : ''}`} onClick={() => setActiveTab('pedidos')}>
+          <ShoppingCart size={22} />
+          <span>Pedidos</span>
+        </button>
+        <button className={`intra-nav-item ${activeTab === 'clientes' ? 'active' : ''}`} onClick={() => setActiveTab('clientes')}>
+          <Users size={22} />
+          <span>Clientes</span>
+        </button>
+        <button className={`intra-nav-item ${activeTab === 'ruta' ? 'active' : ''}`} onClick={() => setActiveTab('ruta')}>
+          <Route size={22} />
+          <span>Ruta</span>
+        </button>
+      </nav>
+    </div>
+  );
+}
