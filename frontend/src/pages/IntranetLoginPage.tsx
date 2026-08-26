@@ -6,6 +6,9 @@ import '../styles/intranet.css';
 export default function IntranetLoginPage() {
   const navigate = useNavigate();
 
+  const [rut, setRut] = React.useState('12.345.678-9');
+  const [password, setPassword] = React.useState('karmac2026');
+
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
     navigate('/intranet');
@@ -25,7 +28,13 @@ export default function IntranetLoginPage() {
             <label>Usuario / RUT</label>
             <div className="intra-input-wrapper">
               <User size={18} />
-              <input type="text" placeholder="Ej: 12.345.678-9" disabled />
+              <input 
+                type="text" 
+                value={rut} 
+                onChange={(e) => setRut(e.target.value)} 
+                placeholder="Ej: 12.345.678-9" 
+                required 
+              />
             </div>
           </div>
           
@@ -33,11 +42,17 @@ export default function IntranetLoginPage() {
             <label>Contraseña</label>
             <div className="intra-input-wrapper">
               <Lock size={18} />
-              <input type="password" placeholder="••••••••" disabled />
+              <input 
+                type="password" 
+                value={password} 
+                onChange={(e) => setPassword(e.target.value)} 
+                placeholder="••••••••" 
+                required 
+              />
             </div>
           </div>
 
-          <button type="submit" className="intra-btn-login" disabled>
+          <button type="submit" className="intra-btn-login">
             Iniciar Sesión
           </button>
         </form>

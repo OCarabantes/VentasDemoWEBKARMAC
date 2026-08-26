@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import { ArrowLeft, ArrowRight, Award, Beef, Boxes, CheckCircle2, CookingPot, Drumstick, Fish, Flame, FlameKindling, Leaf, Package, PiggyBank, Ruler, Search, Snowflake, Tag, Thermometer, Utensils, Weight, ZapIcon } from 'lucide-react';
 import '../styles/catalog.css';
 
@@ -413,16 +414,15 @@ function DiagramPanel({ cat, activeHotspot, onHover }: {
 /* ─── MAIN PAGE ──────────────────────────────────────────────────────────── */
 
 export default function CatalogPage() {
-  const params = new URLSearchParams(window.location.search);
-  const initialCategory = params.get('categoria') ?? 'vacuno';
-  const initialSheet = params.get('ficha') ?? 'lomo-vetado';
-  const isFullSheetView = params.get('vista') === 'ficha';
-  const [activeCat, setActiveCat] = useState(initialCategory);
+  const [searchParams, setSearchParams] = useSearchParams();
+  const activeCat = searchParams.get('categoria') ?? 'vacuno';
+  const selectedFullId = searchParams.get('ficha') ?? 'lomo-vetado';
+  const isFullSheetView = searchParams.get('vista') === 'ficha';
+
   const [activeHotspot, setActiveHotspot] = useState<string | null>(null);
-  const [selectedFullId, setSelectedFullId] = useState(initialSheet);
   const [filter, setFilter] = useState('');
 
-  const cat = CATEGORIES.find(c => c.id === activeCat)!;
+  const cat = CATEGORIES.find(c => c.id === activeCat) ?? CATEGORIES[0];
   const displayed = cat.cuts.filter(c =>
     c.name.toLowerCase().includes(filter.toLowerCase())
   );
@@ -437,7 +437,7 @@ export default function CatalogPage() {
   const totalProducts = CATEGORIES.reduce((sum, category) => sum + category.cuts.length, 0);
 
   function openFullSheet(cutId: string) {
-    window.location.href = `/catalogo?categoria=${activeCat}&ficha=${cutId}&vista=ficha`;
+    setSearchParams({ categoria: activeCat, ficha: cutId, vista: 'ficha' });
   }
 
   if (isFullSheetView) {
@@ -450,7 +450,7 @@ export default function CatalogPage() {
             <div className="fs-hero-content">
               <button
                 className="fs-back-btn"
-                onClick={() => { window.location.href = `/catalogo?categoria=${activeCat}`; }}
+                onClick={() => setSearchParams({ categoria: activeCat })}
               >
                 <ArrowLeft size={16} /> Volver al catálogo
               </button>
@@ -681,7 +681,7 @@ export default function CatalogPage() {
                             <button
                               key={c.id}
                               className={`catalog-tab ${activeCat === c.id ? 'catalog-tab-active' : ''}`}
-                              onClick={() => { setActiveCat(c.id); setActiveHotspot(null); setSelectedFullId(c.cuts[0]?.id ?? ''); setFilter(''); }}
+                              onClick={() => { setSearchParams({ categoria: c.id }); setActiveHotspot(null); setFilter(''); }}
                             >
                               <span className="catalog-tab-icon"><Icon size={20} /></span>
                               <strong>{c.label}</strong>

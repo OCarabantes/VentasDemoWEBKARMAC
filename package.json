@@ -6,6 +6,7 @@
   "scripts": {
     "dev": "concurrently \"npm run dev --workspace frontend\" \"npm run dev --workspace backend\"",
     "build": "npm run build --workspace frontend && npm run build --workspace backend",
+    "vercel-build": "npm run build --workspace frontend",
     "start": "npm run start --workspace backend",
     "lint": "npm run lint --workspace frontend && npm run lint --workspace backend",
     "prisma:migrate": "npm run prisma:migrate --workspace backend",
