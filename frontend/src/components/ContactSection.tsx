@@ -1,12 +1,21 @@
 import React from 'react';
 import { User, Phone, Mail } from 'lucide-react';
+import { useScrollReveal } from '../hooks/useScrollReveal';
 
 export default function ContactSection() {
+  const headingReveal = useScrollReveal({ direction: 'up' });
+  const cardsReveal = useScrollReveal({ direction: 'left', delay: 100 });
+  const formReveal = useScrollReveal({ direction: 'right', delay: 200 });
+
   return (
     <section id="contacto" className="contact">
       <div id="cotizar"></div>
       <div className="container">
-        <div className="section-heading text-center" style={{ textAlign: 'center' }}>
+        <div
+          ref={headingReveal.ref}
+          style={{ ...headingReveal.style, textAlign: 'center' }}
+          className="section-heading text-center"
+        >
           <h2 className="section-title">Cotiza tu Pedido</h2>
           <p className="section-subtitle" style={{ margin: '0 auto 0.5rem', fontWeight: 700, fontSize: '1.25rem' }}>
             Llegamos a todo el país. Exportamos al mundo.
@@ -17,7 +26,7 @@ export default function ContactSection() {
         </div>
 
         <div className="contact-grid">
-          <div>
+          <div ref={cardsReveal.ref} style={cardsReveal.style}>
             <div className="contact-info-card">
               <User className="contact-info-icon" size={24} />
               <div>
@@ -29,7 +38,7 @@ export default function ContactSection() {
                 </div>
               </div>
             </div>
-            
+
             <div className="contact-info-card">
               <User className="contact-info-icon" size={24} />
               <div>
@@ -66,7 +75,7 @@ export default function ContactSection() {
             </div>
           </div>
 
-          <div className="contact-form">
+          <div ref={formReveal.ref} style={formReveal.style} className="contact-form">
             <form onSubmit={(e) => e.preventDefault()}>
               <div className="form-group">
                 <label className="form-label" htmlFor="name">Nombre / Razón Social</label>
@@ -95,7 +104,11 @@ export default function ContactSection() {
                 <label className="form-label" htmlFor="message">Mensaje / Requerimiento</label>
                 <textarea id="message" className="form-control" placeholder="Indique los cortes, volumen estimado y frecuencia de compra..."></textarea>
               </div>
-              <button type="submit" className="btn btn-primary" style={{ width: '100%', marginTop: 'var(--spacing-sm)' }}>
+              <button
+                type="submit"
+                className="btn btn-primary"
+                style={{ width: '100%', marginTop: 'var(--spacing-sm)', padding: '0.9rem 1.5rem', fontSize: '1rem' }}
+              >
                 Enviar Solicitud
               </button>
             </form>

@@ -92,7 +92,7 @@
 }
 
 .sales-section-heading svg {
-  color: #8b1e1e;
+  color: #e31b23;
 }
 
 .sales-section-heading h2 {
@@ -115,7 +115,7 @@
 
 .sales-search input:focus,
 .sales-qty-control input:focus {
-  border-color: #8b1e1e;
+  border-color: #e31b23;
   box-shadow: 0 0 0 3px rgba(139, 30, 30, 0.12);
 }
 
@@ -126,14 +126,14 @@
   gap: 0.55rem;
   min-height: 46px;
   border-radius: 6px;
-  background: #8b1e1e;
+  background: #e31b23;
   color: #fff;
   font-weight: 850;
   transition: background 0.2s, transform 0.2s;
 }
 
 .sales-quote-button:hover {
-  background: #681515;
+  background: #b91c1c;
   transform: translateY(-1px);
 }
 
@@ -184,8 +184,8 @@
 }
 
 .sales-tabs button.active {
-  border-color: #8b1e1e;
-  background: #8b1e1e;
+  border-color: #e31b23;
+  background: #e31b23;
   color: #fff;
 }
 
@@ -260,7 +260,7 @@
   border: 1px solid #d8e0e7;
   border-radius: 6px;
   background: #f8fafc;
-  color: #8b1e1e;
+  color: #e31b23;
 }
 
 .sales-qty-control input {
@@ -307,7 +307,7 @@
 }
 
 .sales-cart-line b {
-  color: #8b1e1e;
+  color: #e31b23;
   font-size: 0.9rem;
   white-space: nowrap;
 }
@@ -317,7 +317,7 @@
   place-items: center;
   min-height: 32px;
   border-radius: 6px;
-  color: #8b1e1e;
+  color: #e31b23;
   background: #fff1ef;
 }
 
@@ -371,7 +371,7 @@
 }
 
 .sales-cart-total strong {
-  color: #8b1e1e;
+  color: #e31b23;
   font-size: 1.35rem;
 }
 

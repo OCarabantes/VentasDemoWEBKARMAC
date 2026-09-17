@@ -1,18 +1,44 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { Menu, X, Briefcase } from 'lucide-react';
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
   const location = useLocation();
 
   const isActive = (path: string) => location.pathname === path;
 
+  useEffect(() => {
+    const handleScroll = () => {
+      setScrolled(window.scrollY > 20);
+    };
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
   return (
-    <nav className="navbar">
+    <nav
+      className="navbar"
+      style={{
+        background: scrolled ? 'rgba(255, 255, 255, 0.98)' : 'rgba(255, 255, 255, 0.94)',
+        boxShadow: scrolled ? '0 8px 30px rgba(227, 27, 35, 0.08)' : '0 2px 10px rgba(0, 0, 0, 0.03)',
+        borderBottom: '1px solid rgba(227, 27, 35, 0.12)',
+        padding: scrolled ? '0.4rem 0' : '0.75rem 0',
+      }}
+    >
       <div className="navbar-container">
         <Link to="/" className="navbar-brand">
-          <img src="/img/LOGO.png" alt="Frigorífico Karmac Logo" style={{ height: '96px', width: 'auto', display: 'block' }} />
+          <img
+            src="/img/LOGO.png"
+            alt="Frigorífico Karmac Logo"
+            style={{
+              height: scrolled ? '72px' : '88px',
+              width: 'auto',
+              display: 'block',
+              transition: 'height 0.3s ease',
+            }}
+          />
         </Link>
 
         <div className={`navbar-links ${isOpen ? 'active' : ''}`}>
@@ -33,18 +59,18 @@ export default function Navbar() {
           </Link>
           <Link
             to="/contacto"
-            className={`navbar-link ${isActive('/contacto') ? 'active' : ''}`} 
+            className={`navbar-link ${isActive('/contacto') ? 'active' : ''}`}
             onClick={() => setIsOpen(false)}
           >
             Contacto
           </Link>
-          <Link 
+          <Link
             to="/intranet/login"
-            className="btn btn-portal" 
+            className="btn btn-portal"
             onClick={() => setIsOpen(false)}
             title="Acceso Intranet"
           >
-            <Briefcase size={16} /> Intranet
+            <Briefcase size={14} /> Intranet
           </Link>
         </div>
 

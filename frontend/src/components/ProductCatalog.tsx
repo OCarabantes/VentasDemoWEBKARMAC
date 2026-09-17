@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
+import { useScrollReveal } from '../hooks/useScrollReveal';
 
 type Category = 'Todos' | 'Vacuno' | 'Cerdo' | 'Aves' | 'Madurados';
 
@@ -58,17 +59,22 @@ const productsData: Product[] = [
 
 export default function ProductCatalog() {
   const [activeCategory, setActiveCategory] = useState<Category>('Todos');
+  const headingReveal = useScrollReveal({ direction: 'up' });
 
   const categories: Category[] = ['Todos', 'Vacuno', 'Cerdo', 'Aves', 'Madurados'];
 
-  const filteredProducts = activeCategory === 'Todos' 
-    ? productsData 
+  const filteredProducts = activeCategory === 'Todos'
+    ? productsData
     : productsData.filter(product => product.category === activeCategory);
 
   return (
     <section id="catalogo" className="catalog">
       <div className="container">
-        <div className="section-heading text-center" style={{ textAlign: 'center' }}>
+        <div
+          ref={headingReveal.ref}
+          style={{ ...headingReveal.style, textAlign: 'center' }}
+          className="section-heading text-center"
+        >
           <h2 className="section-title">Nuestro Catálogo</h2>
           <p className="section-subtitle" style={{ margin: '0 auto var(--spacing-lg)' }}>
             Cortes seleccionados con los más altos estándares de calidad, listos para abastecer su negocio.
@@ -88,23 +94,37 @@ export default function ProductCatalog() {
         </div>
 
         <div className="catalog-grid">
-          {filteredProducts.map((product) => (
-            <article key={product.id} className="product-card">
-              <div className="product-image-container">
-                <img src={product.imageUrl} alt={product.name} className="product-image" />
-                <span className="product-tag">{product.category}</span>
-              </div>
-              <div className="product-content">
-                <h3 className="product-title">{product.name}</h3>
-                <p className="product-specs">{product.specs}</p>
-                <Link to="/contacto" className="btn btn-outline product-action" style={{ border: '1px solid var(--color-primary)', color: 'var(--color-primary)' }}>
-                  Cotizar Rápido
-                </Link>
-              </div>
-            </article>
+          {filteredProducts.map((product, index) => (
+            <ProductCard key={product.id} product={product} index={index} />
           ))}
         </div>
       </div>
     </section>
+  );
+}
+
+function ProductCard({ product, index }: { product: Product; index: number }) {
+  const reveal = useScrollReveal({ delay: index * 80, direction: 'up' });
+
+  return (
+    <article
+      ref={reveal.ref}
+      style={reveal.style}
+      className="product-card"
+    >
+      <div className="product-image-container">
+        <img src={product.imageUrl} alt={product.name} className="product-image" />
+        <span className="product-tag" data-category={product.category}>
+          {product.category}
+        </span>
+      </div>
+      <div className="product-content">
+        <h3 className="product-title">{product.name}</h3>
+        <p className="product-specs">{product.specs}</p>
+        <Link to="/contacto" className="btn btn-outline product-action">
+          Cotizar Rápido
+        </Link>
+      </div>
+    </article>
   );
 }

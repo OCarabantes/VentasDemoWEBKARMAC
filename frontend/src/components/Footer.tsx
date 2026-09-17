@@ -1,24 +1,27 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { MapPin, Phone } from 'lucide-react';
+import { useScrollReveal } from '../hooks/useScrollReveal';
 
 export default function Footer() {
+  const footerReveal = useScrollReveal({ direction: 'up', threshold: 0.05 });
+
   return (
     <footer className="footer">
       <div className="container">
-        <div className="footer-grid">
+        <div ref={footerReveal.ref} style={footerReveal.style} className="footer-grid">
           {/* Columna 1: Info Empresa */}
           <div>
             <div className="footer-brand" style={{ marginBottom: '1.5rem' }}>
               <Link to="/">
-                <img src="/img/LOGO.png" alt="KARMAC 09-31" style={{ height: '108px', width: 'auto', display: 'block' }} />
+                <img src="/img/LOGO.png" alt="KARMAC 09-31" style={{ height: '100px', width: 'auto', display: 'block' }} />
               </Link>
             </div>
             <p className="footer-desc" style={{ lineHeight: '1.8' }}>
               Frigorífico Karmac es una empresa chilena, con más de 30 años de experiencia en la elaboración y procesamiento de productos cárnicos.
             </p>
           </div>
-          
+
           {/* Columna 2: QUIENES SOMOS */}
           <div>
             <h4 className="footer-title">QUIENES SOMOS</h4>
@@ -40,7 +43,7 @@ export default function Footer() {
               <li><Link to="/instalaciones" className="footer-link">Certificaciones: BCR</Link></li>
             </ul>
           </div>
-          
+
           {/* Columna 4: CONTACTO */}
           <div>
             <h4 className="footer-title">CONTACTO</h4>
@@ -85,14 +88,14 @@ export default function Footer() {
               </div>
 
               <div style={{ marginTop: '0.5rem' }}>
-                <a href="/contacto" target="_blank" rel="noopener noreferrer" style={{ color: 'var(--color-primary)', fontWeight: 'bold', fontSize: '0.9rem' }}>
-                  Ir a Formulario de Contacto (Pestaña Nueva) ↗
+                <a href="/contacto" target="_blank" rel="noopener noreferrer" style={{ color: 'var(--color-primary)', fontWeight: 'bold', fontSize: '0.875rem', display: 'inline-flex', alignItems: 'center', gap: '0.35rem', transition: 'all 0.3s ease' }}>
+                  Ir a Formulario de Contacto ↗
                 </a>
               </div>
             </div>
           </div>
         </div>
-        
+
         <div className="footer-bottom">
           <p>© {new Date().getFullYear()} Frigorífico Karmac. Todos los derechos reservados.</p>
         </div>

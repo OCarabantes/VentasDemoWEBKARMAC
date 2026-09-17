@@ -18,6 +18,10 @@ export interface Cut {
 export interface AnimalCategory {
   id: string;
   label: string;
+  title: string;
+  subtitle: string;
+  badge: string;
+  image: string;
   emoji: string;
   diagramSrc: string; // placeholder SVG silhouette path (we draw inline)
   cuts: Cut[];
@@ -27,6 +31,7 @@ const categoryIcons: Record<string, React.ElementType> = {
   vacuno: Beef,
   cerdo: PiggyBank,
   ave: Drumstick,
+  elaborados: Flame,
   salmon: Fish,
   vegana: Leaf,
 };
@@ -35,6 +40,10 @@ export const CATEGORIES: AnimalCategory[] = [
   {
     id: 'vacuno',
     label: 'Vacuno',
+    title: 'Cárnicos de Vacuno',
+    subtitle: 'Lomos nobles, cortes parrilleros y despostes de calidad BRCGS.',
+    badge: 'Cortes Nobles',
+    image: '/img/categories/cat-corte-vacuno.jpg',
     emoji: '🐄',
     diagramSrc: 'vacuno',
     cuts: [
@@ -61,41 +70,65 @@ export const CATEGORIES: AnimalCategory[] = [
   {
     id: 'cerdo',
     label: 'Cerdo',
+    title: 'Productos de Cerdo',
+    subtitle: 'Costillares BBQ, lomos y cortes tiernos seleccionados.',
+    badge: 'Línea Porcina',
+    image: '/img/categories/cat-corte-cerdo.jpg',
     emoji: '🐷',
     diagramSrc: 'cerdo',
     cuts: [
       { id: 'lomo-cerdo', name: 'Lomo de Cerdo', img: '/productos/cerdo/Lomo de Cerdo.png', desc: 'Corte magro del lomo de cerdo, tierno y versátil.', x: 46, y: 38 },
       { id: 'lomito', name: 'Lomito Cerdo', img: '/productos/cerdo/Lomito Cerdo.png', desc: 'El corte más tierno del cerdo, ideal a la plancha.', x: 52, y: 42 },
-      { id: 'baby-ribs', name: 'Baby Ribs', img: '/productos/cerdo/BabyRibs.png', desc: 'Costillas baby back, perfectas para BBQ.', x: 40, y: 52 },
+      { id: 'baby-ribs', name: 'Baby Ribs', img: '/productos/cerdo/BabyRibs.png', desc: 'Costillas baby back seleccionadas, perfectas para BBQ.', x: 40, y: 52 },
       { id: 'malaya', name: 'Malaya', img: '/productos/cerdo/Malaya.png', desc: 'Corte de la panza de cerdo, sabroso y jugoso.', x: 55, y: 58 },
     ],
   },
   {
     id: 'ave',
-    label: 'Ave',
+    label: 'Pollo y Aves',
+    title: 'Pollo y Aves',
+    subtitle: 'Pechugas deshuesadas, trutros y molidas de alta proteína.',
+    badge: 'Frescura Diaria',
+    image: '/img/categories/cat-corte-pollo.jpg',
     emoji: '🍗',
     diagramSrc: 'ave',
     cuts: [
-      { id: 'molida-ave', name: 'Molida de Ave', img: '/productos/Ave/Molida Ave.png', desc: 'Carne molida de ave, liviana y proteica.', x: 50, y: 50 },
+      { id: 'pechuga-deshuesada', name: 'Pechuga Deshuesada', img: '/img/categories/cat-corte-pollo.jpg', desc: 'Filete de pechuga sin piel y sin hueso, estándar Foodservice.', x: 45, y: 40 },
+      { id: 'trutro-entero', name: 'Trutro Entero Calibrado', img: '/img/categories/cat-corte-pollo.jpg', desc: 'Trutro cuarto trasero seleccionado, ideal para asados y casino.', x: 55, y: 45 },
+      { id: 'alitas-pollo', name: 'Alitas de Pollo', img: '/img/categories/cat-corte-pollo.jpg', desc: 'Alitas enteras y seccionadas para appetizers y fritura.', x: 35, y: 55 },
+      { id: 'molida-ave', name: 'Molida de Ave 100%', img: '/productos/Ave/Molida Ave.png', desc: 'Carne molida de ave magra, liviana y alta en proteínas.', x: 50, y: 50 },
+    ],
+  },
+  {
+    id: 'elaborados',
+    label: 'Elaborados',
+    title: 'Elaborados y Molidas',
+    subtitle: 'Hamburguesas 135g, churrascos, embutidos y molidas.',
+    badge: 'Listos & Gourmet',
+    image: '/img/categories/cat-corte-elaborados.jpg',
+    emoji: '🍔',
+    diagramSrc: 'elaborados',
+    cuts: [
+      { id: 'hamburguesa-135', name: 'Hamburguesa Vacuno 135g', img: '/productos/vacuno/HAMBURGUESA 135G.png', desc: 'Medallón 100% vacuno sin conservantes ni aditivos, ideal para QSR.', x: 40, y: 40 },
+      { id: 'churrasco-laminado', name: 'Churrasco Laminado', img: '/productos/vacuno/CHURRASCO LAMINADO.png', desc: 'Láminas calibradas de vacuno para sándwich y servicio rápido.', x: 50, y: 40 },
+      { id: 'molida-vacuno', name: 'Molida de Vacuno Congelada', img: '/productos/vacuno/MOLIDA DE VACUNO  CONGELADO.png', desc: 'Carne molida seleccionada con proporción balanceada de grasa.', x: 60, y: 40 },
+      { id: 'embutidos-artesanales', name: 'Embutidos y Longanizas', img: '/img/categories/cat-corte-elaborados.jpg', desc: 'Embutidos con tripa natural y receta tradicional parrillera.', x: 45, y: 60 },
+      { id: 'albondigas-gourmet', name: 'Albóndigas Gourmet', img: '/productos/vacuno/boloñesa.jpg', desc: 'Albóndigas ultracongeladas listas para salsa y cocción.', x: 55, y: 60 },
+      { id: 'molida-vegana', name: 'Molida Vegana Plant-Based', img: '/productos/Vegana/Molida Vegana 250g y 500g.png', desc: 'Alternativa vegetal de alta proteína, textura similar a la carne.', x: 50, y: 50 },
     ],
   },
   {
     id: 'salmon',
     label: 'Salmón',
+    title: 'Salmón y Pescados',
+    subtitle: 'Medallones y porciones australes IQF de exportación.',
+    badge: 'Origen Austral',
+    image: '/img/categories/cat-corte-salmon.jpg',
     emoji: '🐟',
     diagramSrc: 'salmon',
     cuts: [
       { id: 'medalla-salmon', name: 'Medallas Salmón 100g', img: '/productos/salmon/Medallas Salmon 100g uds.png', desc: 'Porciones premium de salmón de 100g cada una.', x: 40, y: 48 },
       { id: 'trozo-salmon', name: 'Trozo Salmón 120–180g', img: '/productos/salmon/Trozo Salmon 120g-180g.png', desc: 'Trozos de salmón ideales para Foodservice.', x: 60, y: 48 },
-    ],
-  },
-  {
-    id: 'vegana',
-    label: 'Vegana',
-    emoji: '🌱',
-    diagramSrc: 'vegana',
-    cuts: [
-      { id: 'molida-vegana', name: 'Molida Vegana 250g/500g', img: '/productos/Vegana/Molida Vegana 250g y 500g.png', desc: 'Alternativa vegetal de alta proteína, textura similar a la carne.', x: 50, y: 50 },
     ],
   },
 ];
@@ -244,7 +277,8 @@ function getCutZone(cat: AnimalCategory, cut: Cut) {
     return 'Panza y cortes de mayor jugosidad';
   }
   if (cat.id === 'salmon') return 'Porcion central del filete, calibrada para servicio';
-  if (cat.id === 'ave') return 'Mezcla procesada de ave para formatos de alto rendimiento';
+  if (cat.id === 'ave') return 'Cortes nobles y formatos de ave seleccionados para alto rendimiento gastronómico';
+  if (cat.id === 'elaborados') return 'Elaborados cárnicos y soluciones estandarizadas para rápida preparación';
   return 'Base vegetal formulada para reemplazo proteico';
 }
 
@@ -259,9 +293,11 @@ function getNutrition(cut: Cut, index: number) {
 }
 
 function getPreparations(cat: AnimalCategory, cut: Cut) {
-  if (cut.id.includes('molida') || cut.id.includes('hamburguesa')) return ['Plancha caliente', 'Sartén industrial', 'Preparaciones QSR'];
+  if (cut.id.includes('molida') || cut.id.includes('hamburguesa') || cut.id.includes('albondigas')) return ['Plancha caliente', 'Sartén industrial', 'Preparaciones QSR'];
   if (cat.id === 'salmon') return ['Horno suave', 'Plancha antiadherente', 'Vapor controlado'];
   if (cat.id === 'cerdo') return ['Parrilla', 'Horno combinado', 'Coccion lenta'];
+  if (cat.id === 'ave') return ['Plancha grill', 'Horno convector', 'Fritura controlada'];
+  if (cat.id === 'elaborados') return ['Plancha caliente', 'Parrilla express', 'Horno rápido'];
   if (cut.y > 58) return ['Guiso', 'Braseado', 'Coccion prolongada'];
   return ['Parrilla', 'Plancha', 'Horno'];
 }
@@ -415,7 +451,8 @@ function DiagramPanel({ cat, activeHotspot, onHover }: {
 
 export default function CatalogPage() {
   const [searchParams, setSearchParams] = useSearchParams();
-  const activeCat = searchParams.get('categoria') ?? 'vacuno';
+  const rawCat = searchParams.get('categoria') ?? 'vacuno';
+  const activeCat = rawCat === 'vegana' ? 'elaborados' : rawCat;
   const selectedFullId = searchParams.get('ficha') ?? 'lomo-vetado';
   const isFullSheetView = searchParams.get('vista') === 'ficha';
 
@@ -646,7 +683,7 @@ export default function CatalogPage() {
                     </div>
                     <div className="catalog-hero-summary">
                       <div><strong>{totalProducts}</strong><span>productos</span></div>
-                      <div><strong>5</strong><span>categorias</span></div>
+                      <div><strong>{CATEGORIES.length}</strong><span>categorias</span></div>
                       <div><strong>BRCGS</strong><span>estandar</span></div>
                     </div>
                   </section>
@@ -672,6 +709,71 @@ export default function CatalogPage() {
                         ))}
                       </div>
                     </section>
+
+                    {/* ─── GRANDES CATEGORÍAS DE PRODUCTOS (SHOWCASE) ─── */}
+                    <section className="catalog-categories-showcase" aria-label="Categorías de Productos Karmac">
+                      <div className="catalog-categories-header">
+                        <div>
+                          <span className="catalog-section-kicker">Líneas de Producción Karmac</span>
+                          <h2 className="catalog-categories-title">Categorías de Productos</h2>
+                          <p className="catalog-categories-subtitle">
+                            Selecciona una categoría en grande para explorar nuestros cortes, formatos gastronómicos y disponibilidad mayorista.
+                          </p>
+                        </div>
+                        <div className="catalog-categories-count-badge">
+                          <span>{CATEGORIES.length} Categorías</span> • <strong>{totalProducts} Productos</strong>
+                        </div>
+                      </div>
+
+                      <div className="catalog-categories-grid">
+                        {CATEGORIES.map(c => {
+                          const isActive = activeCat === c.id;
+                          const Icon = categoryIcons[c.id] ?? Boxes;
+                          return (
+                            <button
+                              key={c.id}
+                              type="button"
+                              className={`catalog-cat-card ${isActive ? 'catalog-cat-card-active' : ''}`}
+                              onClick={() => {
+                                setSearchParams({ categoria: c.id });
+                                setActiveHotspot(null);
+                                setFilter('');
+                                const el = document.getElementById('catalog-products-section');
+                                if (el) el.scrollIntoView({ behavior: 'smooth' });
+                              }}
+                            >
+                              <div className="catalog-cat-img-wrapper">
+                                <img src={c.image} alt={c.title} className="catalog-cat-img" loading="lazy" />
+                                <div className="catalog-cat-overlay" />
+                              </div>
+
+                              <div className="catalog-cat-top">
+                                <span className="catalog-cat-tag">
+                                  <Icon size={14} /> {c.badge}
+                                </span>
+                                {isActive && (
+                                  <span className="catalog-cat-active-badge">
+                                    <CheckCircle2 size={13} /> Activo
+                                  </span>
+                                )}
+                              </div>
+
+                              <div className="catalog-cat-content">
+                                <span className="catalog-cat-cuts-count">{c.cuts.length} cortes disponibles</span>
+                                <h3 className="catalog-cat-title">{c.title}</h3>
+                                <p className="catalog-cat-sub">{c.subtitle}</p>
+                                <div className="catalog-cat-cta">
+                                  <span>{isActive ? 'Viendo Productos' : 'Explorar Categoría'}</span>
+                                  <ArrowRight size={14} />
+                                </div>
+                              </div>
+                            </button>
+                          );
+                        })}
+                      </div>
+                    </section>
+
+                    <div id="catalog-products-section" style={{ scrollMarginTop: '90px' }} />
 
                     <div className="catalog-tabs">
                       {CATEGORIES.map(c => (
