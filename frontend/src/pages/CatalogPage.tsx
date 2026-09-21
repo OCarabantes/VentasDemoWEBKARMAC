@@ -678,7 +678,6 @@ export default function CatalogPage() {
                       </p>
                       <div className="catalog-hero-actions">
                         <a href="/contacto" className="catalog-primary-action">Solicitar cotización</a>
-                        <a href="/ventas" className="catalog-secondary-action">Gestionar ventas</a>
                       </div>
                     </div>
                     <div className="catalog-hero-summary">

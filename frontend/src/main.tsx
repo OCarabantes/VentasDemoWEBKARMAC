@@ -10,10 +10,9 @@ import PartnersStrip from "./components/PartnersStrip";
 
 import HomePage from "./pages/HomePage";
 import CatalogPage from "./pages/CatalogPage";
+import ContactPage from "./pages/ContactPage";
 import FacilitiesPage from "./pages/FacilitiesPage";
 import AboutPage from "./pages/AboutPage";
-import ContactPage from "./pages/ContactPage";
-import SalesPage from "./pages/SalesPage";
 
 // Intranet
 import IntranetLoginPage from "./pages/IntranetLoginPage";
@@ -33,10 +32,9 @@ function Layout() {
           {/* Public Website */}
           <Route path="/" element={<HomePage />} />
           <Route path="/catalogo" element={<CatalogPage />} />
-          <Route path="/ventas" element={<SalesPage />} />
+          <Route path="/contacto" element={<ContactPage />} />
           <Route path="/instalaciones" element={<FacilitiesPage />} />
           <Route path="/nosotros" element={<AboutPage />} />
-          <Route path="/contacto" element={<ContactPage />} />
           
           {/* Private Intranet */}
           <Route path="/intranet/login" element={<IntranetLoginPage />} />

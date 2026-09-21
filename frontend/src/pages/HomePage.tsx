@@ -38,7 +38,7 @@ export default function HomePage() {
       desc: 'Ponte en contacto con nuestro equipo comercial directo.',
       link: '/contacto',
       label: 'Abrir Contacto',
-      external: true,
+      external: false,
     },
   ];
 

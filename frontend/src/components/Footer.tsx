@@ -88,9 +88,9 @@ export default function Footer() {
               </div>
 
               <div style={{ marginTop: '0.5rem' }}>
-                <a href="/contacto" target="_blank" rel="noopener noreferrer" style={{ color: 'var(--color-primary)', fontWeight: 'bold', fontSize: '0.875rem', display: 'inline-flex', alignItems: 'center', gap: '0.35rem', transition: 'all 0.3s ease' }}>
+                <Link to="/contacto" style={{ color: 'var(--color-primary)', fontWeight: 'bold', fontSize: '0.875rem', display: 'inline-flex', alignItems: 'center', gap: '0.35rem', transition: 'all 0.3s ease' }}>
                   Ir a Formulario de Contacto ↗
-                </a>
+                </Link>
               </div>
             </div>
           </div>

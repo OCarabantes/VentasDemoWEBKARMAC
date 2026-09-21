@@ -140,7 +140,7 @@
 
 html {
   scroll-behavior: smooth;
-  overflow-x: hidden;
+  overflow-x: clip;
 }
 
 body {
@@ -148,7 +148,7 @@ body {
   color: var(--color-text);
   background-color: var(--color-bg-light);
   line-height: 1.6;
-  overflow-x: hidden;
+  overflow-x: clip;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
@@ -269,17 +269,31 @@ button {
    NAVBAR — Glassmorphism Light & Crisp
    ═══════════════════════════════════════════════ */
 .navbar {
-  position: sticky;
+  position: fixed;
   top: 0;
-  z-index: 100;
-  background: rgba(255, 255, 255, 0.94);
+  left: 0;
+  right: 0;
+  width: 100%;
+  z-index: 1000;
+  background: rgba(255, 255, 255, 0.95);
   backdrop-filter: blur(20px) saturate(180%);
   -webkit-backdrop-filter: blur(20px) saturate(180%);
   color: #0f172a;
-  padding: 0.75rem 0;
+  padding: 0.25rem 0;
   border-bottom: 1px solid rgba(227, 27, 35, 0.12);
   box-shadow: 0 4px 20px -4px rgba(0, 0, 0, 0.05);
-  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.navbar-spacer {
+  height: 68px;
+  width: 100%;
+}
+
+@media (max-width: 768px) {
+  .navbar-spacer {
+    height: 60px;
+  }
 }
 
 .navbar-container {
@@ -303,6 +317,18 @@ button {
 
 .navbar-brand:hover {
   transform: scale(1.02);
+}
+
+.navbar-logo-img {
+  height: 58px;
+  width: auto;
+  display: block;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.04));
+}
+
+.navbar.scrolled .navbar-logo-img {
+  height: 48px;
 }
 
 .navbar-links {
@@ -385,6 +411,14 @@ button {
   .navbar-toggle {
     display: block;
   }
+
+  .navbar-logo-img {
+    height: 50px;
+  }
+
+  .navbar.scrolled .navbar-logo-img {
+    height: 42px;
+  }
 }
 
 /* ═══════════════════════════════════════════════
@@ -422,6 +456,43 @@ button {
   height: 100%;
   object-fit: cover;
   z-index: 0;
+}
+
+.hero-burger {
+  min-height: clamp(460px, 60vh, 580px);
+  position: relative;
+  background-color: #0b0f19;
+}
+
+.hero-burger .hero-video {
+  object-fit: cover;
+  object-position: center 55%;
+}
+
+.hero-overlay-burger {
+  background: linear-gradient(
+    90deg,
+    rgba(10, 15, 29, 0.94) 0%,
+    rgba(15, 23, 42, 0.82) 48%,
+    rgba(15, 23, 42, 0.42) 75%,
+    rgba(15, 23, 42, 0.22) 100%
+  ),
+  radial-gradient(
+    circle at 75% 50%,
+    rgba(227, 27, 35, 0.15) 0%,
+    transparent 65%
+  );
+}
+
+@media (max-width: 768px) {
+  .hero-overlay-burger {
+    background: linear-gradient(
+      180deg,
+      rgba(10, 15, 29, 0.88) 0%,
+      rgba(15, 23, 42, 0.92) 60%,
+      rgba(10, 15, 29, 0.96) 100%
+    );
+  }
 }
 
 .hero .container {

@@ -73,6 +73,7 @@ export default function CategoryShowcase() {
             marginBottom: '3rem',
           }}
         >
+          {/* Eyebrow badge */}
           <div
             style={{
               display: 'inline-flex',
@@ -99,18 +100,18 @@ export default function CategoryShowcase() {
               margin: '0 0 0.5rem',
             }}
           >
-            Explora por Categoría
+            Conoce Nuestra Línea de Productos
           </h2>
           <p
             style={{
               color: '#64748b',
               fontSize: '1.05rem',
-              maxWidth: '560px',
+              maxWidth: '680px',
               margin: '0 auto',
               lineHeight: 1.6,
             }}
           >
-            Cortes y productos seleccionados bajo rigurosos estándares de inocuidad, terneza y calibración.
+            Fabricamos para marcas de terceros y producimos bajo nuestra propia marca: cortes seleccionados y elaborados cárnicos con rigurosos estándares de inocuidad, terneza y calibración.
           </p>
         </div>
 

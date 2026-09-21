@@ -58,9 +58,11 @@
 
 .catalog-hero-title {
   margin: 0 0 1rem;
+  font-family: var(--font-display, 'Playfair Display', Georgia, serif);
   font-size: clamp(2.5rem, 6vw, 5rem);
-  line-height: 0.98;
-  letter-spacing: 0;
+  font-weight: 800;
+  line-height: 1.15;
+  letter-spacing: -0.02em;
 }
 
 .catalog-hero-sub {

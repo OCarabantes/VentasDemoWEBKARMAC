@@ -1,0 +1,68 @@
+.about-page {
+  --about-accent: #fde047;
+  --about-copy: #e2e8f0;
+  background: var(--color-bg-light);
+  color: var(--color-text);
+  font-family: var(--font-sans);
+}
+
+.about-page h1,
+.about-page h2,
+.about-page h3 {
+  text-wrap: balance;
+  letter-spacing: -0.025em;
+}
+
+.about-page p { text-wrap: pretty; }
+.about-page svg { flex-shrink: 0; }
+.about-page .section-title { font-size: clamp(2rem, 3.5vw, 3rem); line-height: 1.2; }
+.about-page .section-subtitle { max-width: 65ch; line-height: 1.8; }
+.about-hero .btn-outline { color: white; border-color: #ffffff80; background: #ffffff0d; }
+.about-hero .btn-outline:hover { background: #ffffff24; }
+.about-page .btn { white-space: normal; text-align: center; }
+.about-page :is(button, a):focus-visible { outline: 3px solid var(--color-primary); outline-offset: 5px; }
+.about-hero :is(button, a):focus-visible { outline-color: white; }
+
+.about-destinations {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.2fr);
+  gap: clamp(1.5rem, 4vw, 3rem);
+  align-items: center;
+}
+
+.about-page .country-chip { width: 100%; text-align: left; font-size: 1rem; min-height: 58px; }
+.about-page .country-chip.active { background: var(--color-primary-dark); border-color: var(--color-primary-dark); box-shadow: 0 4px 14px #b91c1c18; }
+.about-destination-detail { min-width: 0; }
+.about-capabilities { scroll-margin-top: 100px; }
+
+.about-capability-row {
+  --about-accent: var(--color-primary-dark);
+  --about-copy: #475569;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  max-width: var(--max-width);
+  margin: 0 auto;
+  min-height: 420px;
+  background: var(--color-card-bg);
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.about-page .about-capability-row h3,
+.about-page .about-certifications h3 { color: var(--color-text) !important; font-size: clamp(1.5rem, 2.5vw, 2rem) !important; line-height: 1.25 !important; }
+.about-capability-row > div { min-width: 0; }
+.about-certifications { --about-copy: #475569; --about-accent: var(--color-primary-dark); }
+
+@media (max-width: 760px) {
+  .about-destinations, .about-capability-row { grid-template-columns: minmax(0, 1fr); }
+  .about-capability-row > div:has(> h3) { order: 1; }
+  .about-capability-row > div:not(:has(> h3)) { min-height: 280px; }
+  .about-page .about-destination-detail { padding: 1.5rem !important; }
+  .about-page .country-chip { padding: 0.8rem; }
+  .about-metrics .container > div { grid-template-columns: repeat(2, minmax(0, 1fr)) !important; gap: 1.25rem 1rem !important; }
+  .about-metrics .container > div > div > div:last-child { font-size: 0.72rem !important; letter-spacing: 0.04em !important; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .about-page *, .about-page *::before { transition: none !important; animation: none !important; }
+  .about-page [style*="opacity"] { opacity: 1 !important; transform: none !important; }
+}

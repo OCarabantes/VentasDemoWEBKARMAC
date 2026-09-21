@@ -2,16 +2,12 @@ import React, { useState } from 'react';
 import {
   Globe,
   ShieldCheck,
-  Flame,
-  Factory,
-  PackageCheck,
-  TrendingUp,
   Award,
-  CheckCircle2,
   ArrowRight,
   ExternalLink,
   ChevronRight
 } from 'lucide-react';
+import '../styles/about.css';
 import { useScrollReveal } from '../hooks/useScrollReveal';
 
 interface Destination {
@@ -105,13 +101,13 @@ export default function AboutPage() {
   };
 
   return (
-    <div style={{ backgroundColor: 'var(--color-bg-light)', color: 'var(--color-text)' }}>
+    <div className="about-page">
 
       {/* 1. HERO INTRO (Above the Fold) */}
-      <section
+      <section className="about-hero"
         style={{
           position: 'relative',
-          padding: '7rem 0 6rem',
+          padding: 'clamp(4rem, 8vw, 7rem) 0',
           backgroundImage: `linear-gradient(135deg, rgba(15, 23, 42, 0.88) 0%, rgba(15, 23, 42, 0.6) 50%, rgba(227, 27, 35, 0.35) 100%), url('/img/karmacPlanta.png')`,
           backgroundSize: 'cover',
           backgroundPosition: 'center',
@@ -139,15 +135,15 @@ export default function AboutPage() {
               }}
             >
               <Award size={16} color="white" />
-              LIDERAZGO Y CALIDAD EN PROCESAMIENTO CÁRNICO GLOBAL
+              NOSOTROS · FRIGORÍFICO KARMAC
             </div>
 
             <h1
               style={{
-                fontFamily: 'var(--font-display)',
-                fontSize: 'clamp(2.5rem, 4.5vw, 4.2rem)',
-                fontWeight: 900,
-                lineHeight: 1.05,
+                fontFamily: "var(--font-display, 'Playfair Display', Georgia, serif)",
+                fontSize: 'clamp(2.5rem, 5vw, 4.5rem)',
+                fontWeight: 800,
+                lineHeight: 1.15,
                 marginBottom: '1.5rem',
                 color: 'white',
                 letterSpacing: '-0.02em',
@@ -163,13 +159,13 @@ export default function AboutPage() {
                 fontWeight: 600,
                 color: '#f1f5f9',
                 marginBottom: '1.25rem',
-                fontStyle: 'italic'
+                lineHeight: 1.6
               }}
             >
               "Excelencia cárnica que conecta los mejores orígenes con el mundo."
             </p>
 
-            <p style={{ fontSize: '1.05rem', color: '#cbd5e1', lineHeight: '1.7', marginBottom: '2.5rem', maxWidth: '780px' }}>
+            <p style={{ fontSize: '1.05rem', color: '#e2e8f0', lineHeight: '1.85', marginBottom: '2.5rem', maxWidth: '66ch' }}>
               En Frigorífico KARMAC combinamos más de 30 años de tradición procesadora con tecnología industrial de última generación en nuestra planta certificada de más de 13.000 m². Impulsados por un equipo humano de excelencia, elaboramos soluciones cárnicas a medida y abastecemos con rigurosa inocuidad tanto a los principales gigantes globales del QSR como a exigentes mercados internacionales en América y Asia.
             </p>
 
@@ -193,27 +189,27 @@ export default function AboutPage() {
       </section>
 
       {/* 2. KEY METRICS COUNTER */}
-      <section
+      <section className="about-metrics"
         ref={metricsReveal.ref}
         style={{
           ...metricsReveal.style,
           background: 'linear-gradient(135deg, #e31b23 0%, #b91c1c 100%)',
           color: 'white',
-          padding: '3rem 0',
+          padding: '1.4rem 0',
           boxShadow: '0 8px 24px rgba(227, 27, 35, 0.25)',
         }}
       >
         <div className="container">
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '2rem', textAlign: 'center' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 220px), 1fr))', gap: '2rem', textAlign: 'center' }}>
             {[
-              { value: '+30 Million', label: 'Kg Procesados Anualmente' },
+              { value: '+30 millones', label: 'Kg Procesados Anualmente' },
               { value: '7+', label: 'Países de Exportación Directa' },
               { value: '100%', label: 'Procesos HACCP & BRCGS' },
               { value: 'Top Tier', label: 'Co-Manufacturer QSR Global' },
             ].map((stat, i) => (
               <div key={i} style={{ textAlign: 'center' }}>
-                <div style={{ fontSize: '2.8rem', fontWeight: 900, color: 'white', lineHeight: 1, fontFamily: 'var(--font-display)' }}>{stat.value}</div>
-                <div style={{ fontSize: '0.85rem', textTransform: 'uppercase', letterSpacing: '1px', marginTop: '0.5rem', color: '#fee2e2', fontWeight: 700 }}>
+                <div style={{ fontSize: 'clamp(1.65rem, 2.5vw, 2.1rem)', fontWeight: 700, color: '#ffffff', lineHeight: 1.1, fontFamily: 'var(--font-sans)' }}>{stat.value}</div>
+                <div style={{ fontSize: '0.78rem', textTransform: 'uppercase', letterSpacing: '0.7px', marginTop: '0.35rem', color: '#ffffff', fontWeight: 600 }}>
                   {stat.label}
                 </div>
               </div>
@@ -240,7 +236,7 @@ export default function AboutPage() {
           </div>
 
           {/* Interactive Selector */}
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1.2fr', gap: '3rem', alignItems: 'center' }}>
+          <div className="about-destinations">
             {/* Country List Chips */}
             <div>
               <p style={{ color: '#64748b', fontSize: '0.85rem', fontWeight: 800, textTransform: 'uppercase', marginBottom: '1rem', letterSpacing: '0.5px' }}>
@@ -248,7 +244,10 @@ export default function AboutPage() {
               </p>
               <div style={{ display: 'flex', flexDirection: 'column', gap: '0.65rem' }}>
                 {exportDestinations.map((dest) => (
-                  <div
+                  <button
+                    type="button"
+                    aria-pressed={selectedDestination.id === dest.id}
+                    aria-controls="about-destination-detail"
                     key={dest.id}
                     className={`country-chip ${selectedDestination.id === dest.id ? 'active' : ''}`}
                     onClick={() => setSelectedDestination(dest)}
@@ -259,13 +258,13 @@ export default function AboutPage() {
                       {dest.region}
                     </span>
                     <ChevronRight size={16} />
-                  </div>
+                  </button>
                 ))}
               </div>
             </div>
 
             {/* Destination Detail Card */}
-            <div
+            <div id="about-destination-detail" className="about-destination-detail" aria-live="polite"
               style={{
                 background: '#ffffff',
                 borderRadius: '20px',
@@ -305,7 +304,7 @@ export default function AboutPage() {
                   <div style={{ color: '#64748b', fontSize: '0.75rem', textTransform: 'uppercase', fontWeight: 800, marginBottom: '0.25rem', letterSpacing: '0.5px' }}>
                     Normativa &amp; Inocuidad Sanitaria:
                   </div>
-                  <div style={{ color: '#0284c7', fontSize: '0.92rem', display: 'flex', alignItems: 'center', gap: '0.5rem', fontWeight: 600 }}>
+                  <div style={{ color: 'var(--color-primary-dark)', fontSize: '0.92rem', display: 'flex', alignItems: 'center', gap: '0.5rem', fontWeight: 600 }}>
                     <ShieldCheck size={16} /> {selectedDestination.compliance}
                   </div>
                 </div>
@@ -337,13 +336,13 @@ export default function AboutPage() {
       </section>
 
       {/* 4. CORE CAPABILITIES — Ganadero / Ranch Edition */}
-      <section id="capacidades" style={{ position: 'relative', overflow: 'hidden', backgroundColor: '#0d0c09' }}>
+      <section className="about-capabilities" id="capacidades" style={{ position: 'relative', overflow: 'hidden', backgroundColor: 'var(--color-bg-subtle)' }}>
 
         {/* ── INTRO FULL-BLEED BANNER ── */}
         <div
           style={{
             position: 'relative',
-            height: '420px',
+            minHeight: '420px', padding: '4rem 0',
             backgroundImage: `linear-gradient(to right, rgba(8,6,3,0.95) 40%, rgba(8,6,3,0.4) 100%), url('/img/rebañoVacunos.png')`,
             backgroundSize: 'cover',
             backgroundPosition: 'center 40%',
@@ -357,35 +356,35 @@ export default function AboutPage() {
                 display: 'inline-flex', alignItems: 'center', gap: '0.5rem',
                 backgroundColor: 'rgba(180, 120, 40, 0.15)',
                 border: '1px solid rgba(180, 120, 40, 0.4)',
-                color: '#d4a055',
+                color: 'var(--about-accent)',
                 padding: '0.35rem 1rem', borderRadius: '99px',
                 fontSize: '0.75rem', fontWeight: 800, letterSpacing: '1.5px',
                 textTransform: 'uppercase', marginBottom: '1.25rem',
               }}>
-                <span style={{ width: '6px', height: '6px', borderRadius: '50%', background: '#d4a055', display: 'inline-block' }} />
+                <span style={{ width: '6px', height: '6px', borderRadius: '50%', background: 'var(--about-accent)', display: 'inline-block' }} />
                 DEL CAMPO A TU MESA — ORIGEN GARANTIZADO
               </div>
-              <h2 style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(1.9rem, 3.5vw, 3rem)', fontWeight: 900, color: 'white', lineHeight: 1.1, marginBottom: '1rem' }}>
+              <h2 style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(1.9rem, 3.5vw, 3rem)', fontWeight: 700, color: 'white', lineHeight: 1.1, marginBottom: '1rem' }}>
                 Nuestras Capacidades<br />
-                <span style={{ color: '#d4a055' }}>Industriales &amp; Ganaderas</span>
+                <span style={{ color: 'var(--about-accent)' }}>Industriales &amp; Ganaderas</span>
               </h2>
-              <p style={{ color: '#9e9587', fontSize: '1.02rem', lineHeight: '1.7' }}>
+              <p style={{ color: 'var(--about-copy)', fontSize: '1.02rem', lineHeight: '1.7' }}>
                 Desde los campos de Argentina, Uruguay y Brasil hasta tu operación HORECA o franquicia QSR. Cada corte que procesamos lleva décadas de expertise ganadero y certificación internacional.
               </p>
             </div>
           </div>
           {/* Decorative diagonal fade */}
-          <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, height: '80px', background: 'linear-gradient(to bottom, transparent, #0d0c09)' }} />
+          <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, height: '80px', background: 'linear-gradient(to bottom, transparent, rgba(15,23,42,0.4))' }} />
         </div>
 
         {/* ── CAPABILITY 1: FULL IMAGE LEFT ── */}
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', minHeight: '400px' }}>
+        <div className="about-capability-row">
           <div style={{
             backgroundImage: `url('/img/vacunoPastando.png')`,
             backgroundSize: 'cover', backgroundPosition: 'center',
             position: 'relative',
           }}>
-            <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to right, transparent 60%, #0d0c09 100%)' }} />
+            <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, rgba(15,23,42,0.2), transparent)' }} />
             <div style={{
               position: 'absolute', bottom: '2rem', left: '2rem',
               background: 'rgba(0,0,0,0.6)', backdropFilter: 'blur(8px)',
@@ -395,14 +394,14 @@ export default function AboutPage() {
               📍 Origen: Argentina · Uruguay · Paraguay · Brasil
             </div>
           </div>
-          <div style={{ padding: '3.5rem 3rem', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
-            <div style={{ color: '#d4a055', fontWeight: 800, fontSize: '0.72rem', letterSpacing: '2px', textTransform: 'uppercase', marginBottom: '0.75rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-              <span style={{ display: 'inline-block', width: '28px', height: '2px', background: '#d4a055' }} /> CAPACIDAD 01
+          <div style={{ padding: 'clamp(1.5rem, 4vw, 3.5rem)', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
+            <div style={{ color: 'var(--about-accent)', fontWeight: 800, fontSize: '0.72rem', letterSpacing: '2px', textTransform: 'uppercase', marginBottom: '0.75rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+              <span style={{ display: 'inline-block', width: '28px', height: '2px', background: 'var(--about-accent)' }} /> CAPACIDAD 01
             </div>
-            <h3 style={{ fontFamily: 'var(--font-display)', fontSize: '1.7rem', fontWeight: 900, color: 'white', marginBottom: '1rem', lineHeight: 1.2 }}>
+            <h3 style={{ fontFamily: 'var(--font-display)', fontSize: '1.7rem', fontWeight: 700, color: 'white', marginBottom: '1rem', lineHeight: 1.2 }}>
               Abastecimiento &amp;<br />Origen Premium
             </h3>
-            <p style={{ color: '#9e9587', fontSize: '0.95rem', lineHeight: '1.75', marginBottom: '1.5rem' }}>
+            <p style={{ color: 'var(--about-copy)', fontSize: '0.95rem', lineHeight: '1.75', marginBottom: '1.5rem' }}>
               Seleccionamos el ganado más ternero de las pampas sudamericanas, garantizando razas de alto marmoleo (Angus, Hereford), bienestar animal certificado y cadena de frío ininterrumpida desde el campo hasta nuestra planta.
             </p>
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.75rem' }}>
@@ -413,8 +412,8 @@ export default function AboutPage() {
                 { label: 'Países de origen', val: 'AR · UY · PY · BR' },
               ].map(({ label, val }) => (
                 <div key={label} style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.06)', borderRadius: '10px', padding: '0.75rem' }}>
-                  <div style={{ color: '#64584a', fontSize: '0.68rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.5px', marginBottom: '0.25rem' }}>{label}</div>
-                  <div style={{ color: '#e5ddd0', fontSize: '0.85rem', fontWeight: 700 }}>{val}</div>
+                  <div style={{ color: 'var(--color-text-muted)', fontSize: '0.75rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.5px', marginBottom: '0.25rem' }}>{label}</div>
+                  <div style={{ color: 'var(--color-text)', fontSize: '0.85rem', fontWeight: 700 }}>{val}</div>
                 </div>
               ))}
             </div>
@@ -422,23 +421,23 @@ export default function AboutPage() {
         </div>
 
         {/* ── CAPABILITY 2: IMAGE RIGHT ── */}
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', minHeight: '400px' }}>
-          <div style={{ padding: '3.5rem 3rem', display: 'flex', flexDirection: 'column', justifyContent: 'center', backgroundColor: '#111009' }}>
-            <div style={{ color: '#d4a055', fontWeight: 800, fontSize: '0.72rem', letterSpacing: '2px', textTransform: 'uppercase', marginBottom: '0.75rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-              <span style={{ display: 'inline-block', width: '28px', height: '2px', background: '#d4a055' }} /> CAPACIDAD 02
+        <div className="about-capability-row">
+          <div style={{ padding: 'clamp(1.5rem, 4vw, 3.5rem)', display: 'flex', flexDirection: 'column', justifyContent: 'center', backgroundColor: 'var(--color-card-bg)' }}>
+            <div style={{ color: 'var(--about-accent)', fontWeight: 800, fontSize: '0.72rem', letterSpacing: '2px', textTransform: 'uppercase', marginBottom: '0.75rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+              <span style={{ display: 'inline-block', width: '28px', height: '2px', background: 'var(--about-accent)' }} /> CAPACIDAD 02
             </div>
-            <h3 style={{ fontFamily: 'var(--font-display)', fontSize: '1.7rem', fontWeight: 900, color: 'white', marginBottom: '1rem', lineHeight: 1.2 }}>
+            <h3 style={{ fontFamily: 'var(--font-display)', fontSize: '1.7rem', fontWeight: 700, color: 'white', marginBottom: '1rem', lineHeight: 1.2 }}>
               Co-Manufacturing<br />&amp; Maquila QSR
             </h3>
-            <p style={{ color: '#9e9587', fontSize: '0.95rem', lineHeight: '1.75', marginBottom: '1.5rem' }}>
+            <p style={{ color: 'var(--about-copy)', fontSize: '0.95rem', lineHeight: '1.75', marginBottom: '1.5rem' }}>
               Producimos bajo especificación exacta para las franquicias más exigentes del mundo. Hamburguesas, medallones y porcionados a medida con control de gramaje, porcentaje de grasa y temperatura de proceso certificados lote a lote.
             </p>
             <div style={{ display: 'flex', gap: '0.75rem', flexWrap: 'wrap' }}>
               {['Burger King®', "Carl's Jr.®", 'Agrosuper®', 'Formatos Custom'].map(tag => (
                 <span key={tag} style={{
                   padding: '0.4rem 0.9rem', borderRadius: '99px',
-                  border: '1px solid rgba(212, 160, 85, 0.3)',
-                  color: '#d4a055', fontSize: '0.8rem', fontWeight: 700,
+                  border: '1px solid rgba(227, 27, 35, 0.2)',
+                  color: 'var(--about-accent)', fontSize: '0.8rem', fontWeight: 700,
                   transition: 'all 0.3s ease',
                 }}>
                   {tag}
@@ -453,46 +452,46 @@ export default function AboutPage() {
         </div>
 
         {/* ── CAPABILITIES 3 & 4: CARD ROW ── */}
-        <div style={{ backgroundColor: '#0d0c09', padding: '4rem 0' }}>
+        <div style={{ backgroundColor: 'var(--color-bg-subtle)', padding: '4rem 0' }}>
           <div className="container">
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '1.5rem' }}>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 300px), 1fr))', gap: '1.5rem' }}>
 
               {/* Card 3 */}
               <div style={{
                 position: 'relative', borderRadius: '20px', overflow: 'hidden',
-                border: '1px solid rgba(212,160,85,0.1)', minHeight: '320px',
+                border: '1px solid rgba(227,27,35,0.12)', minHeight: '320px',
                 backgroundImage: `linear-gradient(to bottom, rgba(13,12,9,0.2) 0%, rgba(13,12,9,0.92) 60%), url('/img/rebañoVacunos.png')`,
                 backgroundSize: 'cover', backgroundPosition: 'center top',
                 display: 'flex', flexDirection: 'column', justifyContent: 'flex-end',
                 padding: '2rem',
                 transition: 'all 0.4s ease',
               }}>
-                <div style={{ color: '#d4a055', fontWeight: 800, fontSize: '0.68rem', letterSpacing: '2px', textTransform: 'uppercase', marginBottom: '0.5rem' }}>CAPACIDAD 03</div>
-                <h3 style={{ fontFamily: 'var(--font-display)', fontSize: '1.3rem', fontWeight: 900, color: 'white', marginBottom: '0.75rem', lineHeight: 1.2 }}>
+                <div style={{ color: 'var(--about-accent)', fontWeight: 800, fontSize: '0.75rem', letterSpacing: '2px', textTransform: 'uppercase', marginBottom: '0.5rem' }}>CAPACIDAD 03</div>
+                <h3 style={{ fontFamily: 'var(--font-display)', fontSize: '1.3rem', fontWeight: 700, color: 'white', marginBottom: '0.75rem', lineHeight: 1.2 }}>
                   Cortes &amp; Envasado<br />de Alta Calidad
                 </h3>
-                <p style={{ color: '#9e9587', fontSize: '0.85rem', lineHeight: '1.6', marginBottom: '1.25rem' }}>
+                <p style={{ color: 'var(--about-copy)', fontSize: '1rem', lineHeight: '1.75', marginBottom: '1.25rem' }}>
                   Líneas de desposte de precisión, envasado termosellado al vacío y congelado I.Q.F. a –40°C. Cada presentación diseñada para retail, HORECA e institucional.
                 </p>
                 <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
                   {['Al Vacío', 'I.Q.F. –40°C', 'Retail Ready', 'Foodservice'].map(t => (
-                    <span key={t} style={{ padding: '0.25rem 0.65rem', borderRadius: '4px', background: 'rgba(212,160,85,0.1)', color: '#d4a055', fontSize: '0.72rem', fontWeight: 700 }}>{t}</span>
+                    <span key={t} style={{ padding: '0.25rem 0.65rem', borderRadius: '4px', background: 'rgba(227,27,35,0.12)', color: 'var(--about-accent)', fontSize: '0.72rem', fontWeight: 700 }}>{t}</span>
                   ))}
                 </div>
               </div>
 
               {/* Card 4 */}
-              <div style={{
-                borderRadius: '20px', border: '1px solid rgba(212,160,85,0.1)',
-                background: 'linear-gradient(145deg, rgba(255,255,255,0.03), rgba(255,255,255,0.01))',
+              <div className="about-certifications" style={{
+                borderRadius: '20px', border: '1px solid rgba(227,27,35,0.12)',
+                background: 'var(--color-card-bg)',
                 padding: '2.25rem', display: 'flex', flexDirection: 'column',
                 transition: 'all 0.4s ease',
               }}>
-                <div style={{ color: '#d4a055', fontWeight: 800, fontSize: '0.68rem', letterSpacing: '2px', textTransform: 'uppercase', marginBottom: '0.75rem' }}>CAPACIDAD 04</div>
-                <h3 style={{ fontFamily: 'var(--font-display)', fontSize: '1.3rem', fontWeight: 900, color: 'white', marginBottom: '0.75rem', lineHeight: 1.2 }}>
+                <div style={{ color: 'var(--about-accent)', fontWeight: 800, fontSize: '0.75rem', letterSpacing: '2px', textTransform: 'uppercase', marginBottom: '0.75rem' }}>CAPACIDAD 04</div>
+                <h3 style={{ fontFamily: 'var(--font-display)', fontSize: '1.3rem', fontWeight: 700, color: 'white', marginBottom: '0.75rem', lineHeight: 1.2 }}>
                   Inocuidad &amp;<br />Certificación Internacional
                 </h3>
-                <p style={{ color: '#9e9587', fontSize: '0.85rem', lineHeight: '1.6', marginBottom: '1.5rem' }}>
+                <p style={{ color: 'var(--about-copy)', fontSize: '1rem', lineHeight: '1.75', marginBottom: '1.5rem' }}>
                   Laboratorio microbiológico in-situ, auditorías permanentes y habilitación sanitaria para 7 mercados de exportación. Cada lote es trazable y auditable.
                 </p>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '0.85rem', marginBottom: '1.5rem', flexGrow: 1 }}>
@@ -503,12 +502,12 @@ export default function AboutPage() {
                     { label: 'Cumplimiento INVIMA / SENASA', pct: 97 },
                   ].map(({ label, pct }) => (
                     <div key={label}>
-                      <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.76rem', color: '#a8a29e', marginBottom: '0.3rem' }}>
+                      <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.76rem', color: 'var(--color-text-muted)', marginBottom: '0.3rem' }}>
                         <span>{label}</span>
-                        <span style={{ color: '#d4a055', fontWeight: 700 }}>{pct}%</span>
+                        <span style={{ color: 'var(--about-accent)', fontWeight: 700 }}>{pct}%</span>
                       </div>
                       <div style={{ height: '4px', background: 'rgba(255,255,255,0.04)', borderRadius: '99px', overflow: 'hidden' }}>
-                        <div style={{ width: `${pct}%`, height: '100%', background: 'linear-gradient(90deg, #7a4a10, #d4a055)', borderRadius: '99px', transition: 'width 1s ease' }} />
+                        <div style={{ width: `${pct}%`, height: '100%', background: 'linear-gradient(90deg, var(--color-primary-dark), var(--color-primary))', borderRadius: '99px', transition: 'width 1s ease' }} />
                       </div>
                     </div>
                   ))}
@@ -517,8 +516,8 @@ export default function AboutPage() {
                   href="/contacto" target="_blank" rel="noopener noreferrer"
                   style={{
                     display: 'inline-flex', alignItems: 'center', gap: '0.5rem',
-                    color: '#d4a055', fontWeight: 700, fontSize: '0.85rem',
-                    textDecoration: 'none', borderTop: '1px solid rgba(212,160,85,0.1)',
+                    color: 'var(--about-accent)', fontWeight: 700, fontSize: '0.85rem',
+                    textDecoration: 'none', borderTop: '1px solid rgba(227,27,35,0.12)',
                     paddingTop: '1rem', marginTop: 'auto',
                     transition: 'color 0.2s',
                   }}
@@ -538,10 +537,10 @@ export default function AboutPage() {
           borderTop: '1px solid rgba(212,160,85,0.08)',
         }}>
           <div className="container">
-            <p style={{ color: '#d4a055', fontWeight: 800, fontSize: '0.78rem', letterSpacing: '2px', textTransform: 'uppercase', marginBottom: '0.75rem' }}>
+            <p style={{ color: 'var(--about-accent)', fontWeight: 800, fontSize: '0.78rem', letterSpacing: '2px', textTransform: 'uppercase', marginBottom: '0.75rem' }}>
               ¿LISTO PARA TRABAJAR JUNTOS?
             </p>
-            <h3 style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(1.5rem, 2.5vw, 2.2rem)', fontWeight: 900, color: 'white', marginBottom: '1.5rem', lineHeight: 1.2 }}>
+            <h3 style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(1.5rem, 2.5vw, 2.2rem)', fontWeight: 700, color: 'white', marginBottom: '1.5rem', lineHeight: 1.2 }}>
               Desde el origen hasta tu operación.<br />Hablemos de volumen y especificaciones.
             </h3>
             <a

@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import { Snowflake, ShieldCheck, MapPin, Award, Building } from 'lucide-react';
 import { useScrollReveal } from '../hooks/useScrollReveal';
 
@@ -170,9 +171,9 @@ export default function FacilitiesPage() {
               <p style={{ color: '#475569', fontSize: '1.05rem', lineHeight: '1.7', marginBottom: '1.5rem' }}>
                 Con la sinergia entre nuestra Casa Matriz en Huechuraba, la Distribuidora Cordillera en Quilicura y la Planta de Producción de más de 13.000 m² en Lautaro, garantizamos continuidad operacional y entregas puntuales a lo largo de todo Chile.
               </p>
-              <a href="/contacto" target="_blank" rel="noopener noreferrer" className="btn btn-primary" style={{ padding: '0.9rem 2rem' }}>
-                Contactar a Ventas ↗
-              </a>
+              <Link to="/contacto" className="btn btn-primary" style={{ padding: '0.9rem 2rem' }}>
+                Ir a Contacto ↗
+              </Link>
             </div>
             <div style={{ textAlign: 'center' }}>
               <img
