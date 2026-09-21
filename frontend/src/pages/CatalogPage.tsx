@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { ArrowLeft, ArrowRight, Award, Beef, Boxes, CheckCircle2, CookingPot, Drumstick, Fish, Flame, FlameKindling, Leaf, Package, PiggyBank, Ruler, Search, Snowflake, Tag, Thermometer, Utensils, Weight, ZapIcon } from 'lucide-react';
 import '../styles/catalog.css';
@@ -407,28 +407,43 @@ function ProductCard({ cut, index, isHighlighted, onMouseEnter, onMouseLeave, on
       onMouseEnter={onMouseEnter}
       onMouseLeave={onMouseLeave}
     >
+      {/* Image */}
       <div className="product-card-img-wrap">
         <img src={cut.img} alt={cut.name} className="product-card-img" loading="lazy" />
         <span className="product-card-badge">{meta.sku}</span>
-        <div className="product-hover-sheet">
-          <strong>Ficha técnica</strong>
-          <dl>
-            <div><dt>Formato</dt><dd>{meta.format}</dd></div>
-            <div><dt>Stock</dt><dd>{meta.stock} cajas</dd></div>
-            <div><dt>Conservación</dt><dd>{meta.temperature}</dd></div>
-            <div><dt>Vida útil</dt><dd>{meta.shelfLife}</dd></div>
-          </dl>
-        </div>
       </div>
+
+      {/* Body */}
       <div className="product-card-body">
+        {/* Channel tag */}
+        <span className="product-card-channel">{meta.channel}</span>
+
+        {/* Name */}
         <h3 className="product-card-name">{cut.name}</h3>
-        <p className="product-card-desc">{cut.desc}</p>
-        <div className="product-card-meta">
-          <span>{meta.format}</span>
-          <span>{meta.stock} cajas</span>
+
+        {/* Mini spec sheet — always visible */}
+        <div className="product-card-specs">
+          <div className="product-card-spec-row">
+            <span className="product-card-spec-label">Formato</span>
+            <span className="product-card-spec-value">{meta.format}</span>
+          </div>
+          <div className="product-card-spec-row">
+            <span className="product-card-spec-label">Stock</span>
+            <span className="product-card-spec-value">{meta.stock} cajas</span>
+          </div>
+          <div className="product-card-spec-row">
+            <span className="product-card-spec-label">Conservación</span>
+            <span className="product-card-spec-value">{meta.temperature}</span>
+          </div>
+          <div className="product-card-spec-row">
+            <span className="product-card-spec-label">Lead time</span>
+            <span className="product-card-spec-value">{meta.leadTime}</span>
+          </div>
         </div>
+
+        {/* CTA */}
         <button className="product-card-cta" onClick={onSelect}>
-          Ver ficha completa <ArrowRight size={15} />
+          Ver ficha completa <ArrowRight size={14} />
         </button>
       </div>
     </article>
@@ -472,6 +487,21 @@ export default function CatalogPage() {
   const cookingRecommendation = getCookingRecommendation(selectedCut);
   const CookingIcon = cookingRecommendation.Icon;
   const totalProducts = CATEGORIES.reduce((sum, category) => sum + category.cuts.length, 0);
+
+  useEffect(() => {
+    // If arriving with a category in searchParams or hash, scroll directly to the products section
+    const catParam = searchParams.get('categoria');
+    const hashTarget = window.location.hash.includes('catalog-products-section');
+    if ((catParam || hashTarget) && !isFullSheetView) {
+      const timer = setTimeout(() => {
+        const el = document.getElementById('catalog-products-section');
+        if (el) {
+          el.scrollIntoView({ behavior: 'smooth' });
+        }
+      }, 150);
+      return () => clearTimeout(timer);
+    }
+  }, [activeCat, isFullSheetView]);
 
   function openFullSheet(cutId: string) {
     setSearchParams({ categoria: activeCat, ficha: cutId, vista: 'ficha' });
@@ -659,173 +689,109 @@ export default function CatalogPage() {
 
   return (
     <div className="catalog-page">
-                  <section className="catalog-hero">
-                    <video 
-                      autoPlay 
-                      loop 
-                      muted 
-                      playsInline 
-                      className="catalog-hero-video"
-                    >
-                      <source src="/video/ParrillaCarne.mp4" type="video/mp4" />
-                    </video>
-                    <div className="catalog-hero-overlay"></div>
-                    <div className="catalog-hero-content">
-                      <div className="catalog-hero-badge">Catálogo comercial</div>
-                      <h1 className="catalog-hero-title">Productos Karmac</h1>
-                      <p className="catalog-hero-sub">
-                        Explora cortes, formatos y disponibilidad referencial para preparar compras, cotizaciones y surtidos por canal.
-                      </p>
-                      <div className="catalog-hero-actions">
-                        <a href="/contacto" className="catalog-primary-action">Solicitar cotización</a>
-                      </div>
-                    </div>
-                    <div className="catalog-hero-summary">
-                      <div><strong>{totalProducts}</strong><span>productos</span></div>
-                      <div><strong>{CATEGORIES.length}</strong><span>categorias</span></div>
-                      <div><strong>BRCGS</strong><span>estandar</span></div>
-                    </div>
-                  </section>
+      {/* ── HERO — compact video strip ────────────────────────────────────── */}
+      <section className="catalog-hero">
+        <video autoPlay loop muted playsInline className="catalog-hero-video">
+          <source src="/video/ParrillaCarne.mp4" type="video/mp4" />
+        </video>
+        <div className="catalog-hero-overlay" />
+        <div className="catalog-hero-content">
+          <div className="catalog-hero-badge">Catálogo comercial Karmac</div>
+          <h1 className="catalog-hero-title">Productos Karmac</h1>
+          <p className="catalog-hero-sub">
+            Cortes, formatos y stock para HORECA, Retail y Mayorista. Cotiza directo con nuestro equipo.
+          </p>
+          <div className="catalog-hero-actions">
+            <a href="/contacto" className="catalog-primary-action">Solicitar cotización</a>
+          </div>
+        </div>
+        <div className="catalog-hero-summary">
+          <div><strong>{totalProducts}</strong><span>productos</span></div>
+          <div><strong>{CATEGORIES.length}</strong><span>categorías</span></div>
+          <div><strong>BRCGS</strong><span>estándar</span></div>
+        </div>
+      </section>
 
-                  <section className="catalog-shell">
-                    <section className="catalog-offers-banner" aria-label="Ofertas comerciales">
-                      <div className="catalog-offers-heading">
-                        <span className="catalog-section-kicker">Ofertas</span>
-                        <h2>Promociones activas</h2>
-                        <p>Productos con condiciones especiales para compra mayorista.</p>
-                      </div>
-                      <div className="catalog-offers-grid">
-                        {catalogDeals.map(deal => (
-                          <article className="catalog-offer-card" key={deal.title}>
-                            <div className="catalog-offer-top">
-                              <span>{deal.title}</span>
-                              <b>{deal.discount}</b>
-                            </div>
-                            <strong>{deal.product}</strong>
-                            <p>{deal.detail}</p>
-                            <small>{deal.validity}</small>
-                          </article>
-                        ))}
-                      </div>
-                    </section>
+      {/* ── SHELL ─────────────────────────────────────────────────────────── */}
+      <section className="catalog-shell">
 
-                    {/* ─── GRANDES CATEGORÍAS DE PRODUCTOS (SHOWCASE) ─── */}
-                    <section className="catalog-categories-showcase" aria-label="Categorías de Productos Karmac">
-                      <div className="catalog-categories-header">
-                        <div>
-                          <span className="catalog-section-kicker">Líneas de Producción Karmac</span>
-                          <h2 className="catalog-categories-title">Categorías de Productos</h2>
-                          <p className="catalog-categories-subtitle">
-                            Selecciona una categoría en grande para explorar nuestros cortes, formatos gastronómicos y disponibilidad mayorista.
-                          </p>
-                        </div>
-                        <div className="catalog-categories-count-badge">
-                          <span>{CATEGORIES.length} Categorías</span> • <strong>{totalProducts} Productos</strong>
-                        </div>
-                      </div>
-
-                      <div className="catalog-categories-grid">
-                        {CATEGORIES.map(c => {
-                          const isActive = activeCat === c.id;
-                          const Icon = categoryIcons[c.id] ?? Boxes;
-                          return (
-                            <button
-                              key={c.id}
-                              type="button"
-                              className={`catalog-cat-card ${isActive ? 'catalog-cat-card-active' : ''}`}
-                              onClick={() => {
-                                setSearchParams({ categoria: c.id });
-                                setActiveHotspot(null);
-                                setFilter('');
-                                const el = document.getElementById('catalog-products-section');
-                                if (el) el.scrollIntoView({ behavior: 'smooth' });
-                              }}
-                            >
-                              <div className="catalog-cat-img-wrapper">
-                                <img src={c.image} alt={c.title} className="catalog-cat-img" loading="lazy" />
-                                <div className="catalog-cat-overlay" />
-                              </div>
-
-                              <div className="catalog-cat-top">
-                                <span className="catalog-cat-tag">
-                                  <Icon size={14} /> {c.badge}
-                                </span>
-                                {isActive && (
-                                  <span className="catalog-cat-active-badge">
-                                    <CheckCircle2 size={13} /> Activo
-                                  </span>
-                                )}
-                              </div>
-
-                              <div className="catalog-cat-content">
-                                <span className="catalog-cat-cuts-count">{c.cuts.length} cortes disponibles</span>
-                                <h3 className="catalog-cat-title">{c.title}</h3>
-                                <p className="catalog-cat-sub">{c.subtitle}</p>
-                                <div className="catalog-cat-cta">
-                                  <span>{isActive ? 'Viendo Productos' : 'Explorar Categoría'}</span>
-                                  <ArrowRight size={14} />
-                                </div>
-                              </div>
-                            </button>
-                          );
-                        })}
-                      </div>
-                    </section>
-
-                    <div id="catalog-products-section" style={{ scrollMarginTop: '90px' }} />
-
-                    <div className="catalog-tabs">
-                      {CATEGORIES.map(c => (
-                        (() => {
-                          const Icon = categoryIcons[c.id] ?? Boxes;
-                          return (
-                            <button
-                              key={c.id}
-                              className={`catalog-tab ${activeCat === c.id ? 'catalog-tab-active' : ''}`}
-                              onClick={() => { setSearchParams({ categoria: c.id }); setActiveHotspot(null); setFilter(''); }}
-                            >
-                              <span className="catalog-tab-icon"><Icon size={20} /></span>
-                              <strong>{c.label}</strong>
-                              <small>{c.cuts.length} productos</small>
-                            </button>
-                          );
-                        })()
-                      ))}
-                    </div>
-
-                    <div className="catalog-grid-header">
-                      <div>
-                        <span className="catalog-section-kicker">Explorar</span>
-                        <h2 className="catalog-grid-title">Productos de {cat.label}</h2>
-                      </div>
-                      <label className="catalog-search">
-                        <Search size={18} />
-                        <input
-                          placeholder="Buscar producto"
-                          value={filter}
-                          onChange={e => setFilter(e.target.value)}
-                        />
-                      </label>
-                    </div>
-
-                    <div className="catalog-grid">
-                      {displayed.map((cut, index) => (
-                        <ProductCard
-                          key={cut.id}
-                          cut={cut}
-                          index={index}
-                          isHighlighted={activeHotspot === cut.id}
-                          onMouseEnter={() => setActiveHotspot(cut.id)}
-                          onMouseLeave={() => setActiveHotspot(null)}
-                          onSelect={() => openFullSheet(cut.id)}
-                        />
-                      ))}
-                    </div>
-
-                    {displayed.length === 0 && (
-                      <div className="catalog-empty">No se encontraron productos para "{filter}"</div>
-                    )}
-                  </section>
+        {/* Offers strip */}
+        <section className="catalog-offers-banner" aria-label="Ofertas comerciales">
+          <div className="catalog-offers-heading">
+            <span className="catalog-section-kicker">Ofertas</span>
+            <h2>Promociones activas</h2>
+            <p>Condiciones especiales para compra mayorista.</p>
+          </div>
+          <div className="catalog-offers-grid">
+            {catalogDeals.map(deal => (
+              <article className="catalog-offer-card" key={deal.title}>
+                <div className="catalog-offer-top">
+                  <span>{deal.title}</span>
+                  <b>{deal.discount}</b>
                 </div>
-                );
+                <strong>{deal.product}</strong>
+                <p>{deal.detail}</p>
+                <small>{deal.validity}</small>
+              </article>
+            ))}
+          </div>
+        </section>
+
+        {/* ── Category tabs + products ─────────────────────────────────── */}
+        <div id="catalog-products-section" style={{ scrollMarginTop: '90px' }} />
+
+        <div className="catalog-tabs">
+          {CATEGORIES.map(c => (
+            (() => {
+              const Icon = categoryIcons[c.id] ?? Boxes;
+              return (
+                <button
+                  key={c.id}
+                  className={`catalog-tab ${activeCat === c.id ? 'catalog-tab-active' : ''}`}
+                  onClick={() => { setSearchParams({ categoria: c.id }); setActiveHotspot(null); setFilter(''); }}
+                >
+                  <span className="catalog-tab-icon"><Icon size={20} /></span>
+                  <strong>{c.label}</strong>
+                  <small>{c.cuts.length} productos</small>
+                </button>
+              );
+            })()
+          ))}
+        </div>
+
+        <div className="catalog-grid-header">
+          <div>
+            <span className="catalog-section-kicker">Explorar</span>
+            <h2 className="catalog-grid-title">Productos de {cat.label}</h2>
+          </div>
+          <label className="catalog-search">
+            <Search size={18} />
+            <input
+              placeholder="Buscar producto"
+              value={filter}
+              onChange={e => setFilter(e.target.value)}
+            />
+          </label>
+        </div>
+
+        <div className="catalog-grid">
+          {displayed.map((cut, index) => (
+            <ProductCard
+              key={cut.id}
+              cut={cut}
+              index={index}
+              isHighlighted={activeHotspot === cut.id}
+              onMouseEnter={() => setActiveHotspot(cut.id)}
+              onMouseLeave={() => setActiveHotspot(null)}
+              onSelect={() => openFullSheet(cut.id)}
+            />
+          ))}
+        </div>
+
+        {displayed.length === 0 && (
+          <div className="catalog-empty">No se encontraron productos para "{filter}"</div>
+        )}
+      </section>
+    </div>
+  );
 }

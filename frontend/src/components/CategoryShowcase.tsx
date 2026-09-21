@@ -18,7 +18,7 @@ const categories: CategoryItem[] = [
     title: 'Cortes de Vacuno',
     subtitle: 'Lomo Vetado, Entraña, Picana & Asiento',
     image: '/img/categories/cat-vacuno.jpg',
-    link: '/catalogo?categoria=vacuno',
+    link: '/catalogo?categoria=vacuno#catalog-products-section',
     tag: 'Angus & Wagyu',
   },
   {
@@ -26,7 +26,7 @@ const categories: CategoryItem[] = [
     title: 'Cerdo Seleccionado',
     subtitle: 'Baby Ribs BBQ, Lomo, Lomito & Malaya',
     image: '/img/categories/cat-cerdo.jpg',
-    link: '/catalogo?categoria=cerdo',
+    link: '/catalogo?categoria=cerdo#catalog-products-section',
     tag: 'Cortes Tiernos',
   },
   {
@@ -34,7 +34,7 @@ const categories: CategoryItem[] = [
     title: 'Salmón & Pescados',
     subtitle: 'Medallones 100g y Trozos Calibrados',
     image: '/img/categories/cat-salmon.jpg',
-    link: '/catalogo?categoria=salmon',
+    link: '/catalogo?categoria=salmon#catalog-products-section',
     tag: 'Pesca Austral',
   },
   {
@@ -42,7 +42,7 @@ const categories: CategoryItem[] = [
     title: 'Hamburguesas & QSR',
     subtitle: 'Medallones Especiales y Molidas Mayoristas',
     image: '/img/categories/cat-hamburguesas.jpg',
-    link: '/catalogo?categoria=ave',
+    link: '/catalogo?categoria=elaborados#catalog-products-section',
     tag: 'Co-Manufacturing',
   },
 ];

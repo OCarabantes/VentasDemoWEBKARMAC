@@ -21,6 +21,7 @@ import IntranetDashboard from "./pages/IntranetDashboard";
 function Layout() {
   const location = useLocation();
   const isIntranet = location.pathname.startsWith('/intranet');
+  const isContact = location.pathname === '/contacto';
 
   return (
     <>
@@ -42,8 +43,8 @@ function Layout() {
         </Routes>
       </main>
 
-      {!isIntranet && <PartnersStrip />}
-      {!isIntranet && <Footer />}
+      {!isIntranet && !isContact && <PartnersStrip />}
+      {!isIntranet && !isContact && <Footer />}
     </>
   );
 }
